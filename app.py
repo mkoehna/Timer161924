@@ -33,30 +33,27 @@ def timer_worker():
             time.sleep(1)
             timer_state['time_left'] -= 1
         else:
-            # Czas się skończył
-            if timer_state['is_break']:
-                # Koniec przerwy - przejdź do następnej sesji pracy
-                timer_state['is_break'] = False
-                timer_state['current_session'] += 1
+            # Czas się skończył - nalicz sesję
+            timer_state['current_session'] += 1
 
-                if timer_state['current_session'] >= timer_state['total_sessions']:
-                    # Wszystkie sesje zakończone
-                    timer_state['is_running'] = False
-                    timer_state['current_cycle'] += 1
-                    if timer_state['current_cycle'] >= timer_state['cycles']:
-                        # Wszystkie cykle zakończone
-                        timer_state['current_cycle'] = 0
-                        timer_state['current_session'] = 0
-                else:
-                    # Rozpocznij następną sesję pracy (konwertuj minuty na sekundy)
-                    timer_state['time_left'] = round(timer_state['work_duration'] * 60)
+            # Sprawdź czy wszystkie sesje zostały ukończone
+            if timer_state['current_session'] >= timer_state['total_sessions']:
+                # Wszystkie sesje zakończone - koniec timera
+                timer_state['is_running'] = False
+                break
+
+            if timer_state['is_break']:
+                # Koniec przerwy → przejdź do pracy
+                timer_state['is_break'] = False
+                timer_state['time_left'] = round(timer_state['work_duration'] * 60)
+
+                # Nalicz cykl po ukończeniu przerwy (praca + przerwa = 1 cykl)
+                timer_state['current_cycle'] += 1
+
             else:
-                # Koniec sesji pracy - rozpocznij przerwę (konwertuj minuty na sekundy)
+                # Koniec pracy → przejdź do przerwy
                 timer_state['is_break'] = True
                 timer_state['time_left'] = round(timer_state['break_duration'] * 60)
-
-            if not timer_state['is_running']:
-                break
 
 
 @app.route('/')
@@ -99,11 +96,11 @@ def start_timer():
             'break_duration': break_duration_decimal,  # Zachowaj ułamek dla frontend
             'cycles': cycles,
             'is_running': True,
-            'current_session': 0,
-            'current_cycle': 0,
+            'current_session': 0,  # Aktualna sesja (0-7 dla 4 cykli)
+            'current_cycle': 0,  # Aktualny cykl (0-3 dla 4 cykli)
             'is_break': False,
             'time_left': work_duration_seconds,  # Sekundy dla odliczania
-            'total_sessions': cycles,
+            'total_sessions': cycles * 2,  # Każdy cykl = 2 sesje (praca + przerwa)
             'start_time': datetime.now(),
             'paused_time': 0
         })

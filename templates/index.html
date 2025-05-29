@@ -384,8 +384,12 @@
 
         function updateUI(state) {
             timerDisplay.textContent = formatTime(state.time_left);
+
+            // Wyświetl sesje: aktualną sesję (1-indexowane) i total
             currentSessionSpan.textContent = state.current_session + 1;
             totalSessionsSpan.textContent = state.total_sessions;
+
+            // Wyświetl cykle: aktualny cykl (1-indexowane) i total
             currentCycleSpan.textContent = state.current_cycle + 1;
             totalCyclesSpan.textContent = state.cycles;
 
@@ -427,7 +431,7 @@
             stopBtn.disabled = !state.is_running && state.time_left === 0;
 
             // Aktualizacja paska postępu
-            const currentTotalTime = state.is_break ? state.break_duration * 60 : state.work_duration * 60;
+            const currentTotalTime = state.is_break ? Math.round(state.break_duration * 60) : Math.round(state.work_duration * 60);
             updateProgress(state.time_left, currentTotalTime);
         }
 
