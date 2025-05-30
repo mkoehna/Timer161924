@@ -138,6 +138,182 @@
             border-color: #dc3545;
             box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
         }
+
+        /* Focus Mode Toggle Styling */
+        .focus-toggle-wrapper {
+            vertical-align: middle;
+        }
+
+        .focus-toggle {
+            transform: scale(1.2);
+        }
+
+        .focus-toggle:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+
+        .focus-label {
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .focus-label:hover {
+            color: #667eea;
+        }
+
+        /* ZEN FOCUS MODE STYLES */
+        .zen-focus-mode {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            transition: background 0.5s ease-in-out, all 0.5s ease-in-out;
+        }
+
+        .zen-focus-mode.break-phase {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+        }
+
+        .zen-focus-mode .container {
+            padding: 0 !important;
+            max-width: none !important;
+        }
+
+        .zen-focus-mode .col-lg-8 {
+            max-width: none !important;
+            flex: none !important;
+            width: 100% !important;
+        }
+
+        .zen-focus-mode .timer-card {
+            margin: 0 !important;
+            height: 100vh !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            backdrop-filter: none !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+
+        .zen-focus-mode .card-body {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            height: 100vh !important;
+            padding: 2rem !important;
+        }
+
+        .zen-focus-mode .settings-form {
+            display: none !important;
+        }
+
+        /* Zen Mode - Timer zajmuje 60% wysokości ekranu */
+        .zen-focus-mode .timer-display {
+            font-size: calc(60vh / 4) !important;
+            color: #ffffff !important;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3) !important;
+            margin: 0 !important;
+            font-weight: 300 !important;
+            line-height: 0.8 !important;
+            height: 60vh !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        /* Zen Mode - SVG Timer Circle */
+        .zen-focus-mode .position-relative {
+            height: 60vh !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .zen-focus-mode svg {
+            width: calc(60vh * 0.8) !important;
+            height: calc(60vh * 0.8) !important;
+        }
+
+        .zen-focus-mode svg circle {
+            stroke-width: 12 !important;
+            r: calc((60vh * 0.8 - 24) / 2) !important;
+            cx: calc(60vh * 0.4) !important;
+            cy: calc(60vh * 0.4) !important;
+        }
+
+        /* Zen Mode - Subtle Info Cards */
+        .zen-focus-mode .info-card {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            backdrop-filter: blur(10px) !important;
+            margin: 0 1rem !important;
+        }
+
+        .zen-focus-mode .info-label {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-size: 0.8rem !important;
+        }
+
+        .zen-focus-mode .info-value {
+            color: #ffffff !important;
+            font-size: 1.6rem !important;
+            font-weight: 600 !important;
+        }
+
+        /* Zen Mode - Floating Buttons */
+        .zen-focus-mode .btn-timer {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            color: #ffffff !important;
+            backdrop-filter: blur(10px) !important;
+            margin: 0.3rem !important;
+            transition: all 0.3s ease !important;
+            font-weight: 600 !important;
+        }
+
+        .zen-focus-mode .btn-timer:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+            border-color: rgba(255, 255, 255, 0.6) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .zen-focus-mode .btn-timer:disabled {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        /* Zen Mode - Progress Circle */
+        .zen-focus-mode .progress-circle {
+            stroke: #ffffff !important;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4)) !important;
+        }
+
+        .zen-focus-mode svg circle:first-child {
+            stroke: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        /* Zen Mode - Focus Toggle */
+        .zen-focus-mode .focus-label {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        .zen-focus-mode .focus-toggle:checked {
+            background-color: #ffffff !important;
+            border-color: #ffffff !important;
+        }
+
+        /* Zen Mode - Minimized Session Info */
+        .zen-focus-mode .row.mb-5 {
+            margin-bottom: 1rem !important;
+        }
+
+        /* Smooth transitions */
+        .container, .timer-card, .card-body, .timer-display, .info-card, .btn-timer {
+            transition: all 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body>
@@ -187,7 +363,7 @@
                             <div id="timer-display" class="timer-display">00:00</div>
                         </div>
 
-                        <!-- Przyciski sterowania -->
+                        <!-- Przyciski sterowania i Focus toggle -->
                         <div class="mt-4">
                             <button id="start-btn" class="btn btn-success btn-timer">
                                 <i class="fas fa-play me-2"></i>Start
@@ -198,6 +374,16 @@
                             <button id="stop-btn" class="btn btn-danger btn-timer" disabled>
                                 <i class="fas fa-stop me-2"></i>Stop
                             </button>
+
+                            <!-- Focus Mode Toggle -->
+                            <div class="focus-toggle-wrapper d-inline-block ms-3">
+                                <div class="form-check form-switch d-inline-flex align-items-center">
+                                    <input class="form-check-input focus-toggle" type="checkbox" id="focus-toggle">
+                                    <label class="form-check-label ms-2 focus-label" for="focus-toggle">
+                                        <i class="fas fa-expand me-1"></i>Focus
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -294,6 +480,9 @@
         const breakSecondsInput = document.getElementById('break-seconds');
         const cyclesInput = document.getElementById('cycles');
 
+        const focusToggle = document.getElementById('focus-toggle');
+        let focusModeActive = false;
+
         // Funkcje pomocnicze
         function formatTime(seconds) {
             const mins = Math.floor(seconds / 60);
@@ -333,8 +522,84 @@
             }
         }
 
+        // Focus Mode Functions
+        function toggleFocusMode(enable) {
+            if (enable) {
+                document.body.classList.add('zen-focus-mode');
+                focusModeActive = true;
+                focusToggle.checked = true;
+
+                // FORCE exact dimensions with JavaScript
+                setTimeout(() => {
+                    const infoCards = document.querySelectorAll('.info-card');
+                    infoCards.forEach(card => {
+                        card.style.width = '300px';
+                        card.style.height = '84px';
+                        card.style.minWidth = '300px';
+                        card.style.minHeight = '84px';
+                        card.style.maxWidth = '300px';
+                        card.style.maxHeight = '84px';
+                        card.style.flex = '0 0 300px';
+                        card.style.display = 'flex';
+                        card.style.flexDirection = 'column';
+                        card.style.justifyContent = 'center';
+                        card.style.alignItems = 'center';
+                        card.style.boxSizing = 'border-box';
+                    });
+                }, 10); // Small delay to ensure DOM is ready
+
+                // Update SVG dasharray for new radius (200px)
+                const newCircumference = 2 * Math.PI * 200; // ≈ 1256
+                progressCircle.style.strokeDasharray = newCircumference;
+                progressCircle.style.strokeDashoffset = newCircumference;
+
+                // Update icon to compress when active
+                const icon = document.querySelector('.focus-label i');
+                icon.className = 'fas fa-compress me-1';
+
+                // Scroll to top for full immersion
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            } else {
+                document.body.classList.remove('zen-focus-mode');
+                document.body.classList.remove('break-phase');
+                focusModeActive = false;
+                focusToggle.checked = false;
+
+                // RESTORE original dimensions
+                setTimeout(() => {
+                    const infoCards = document.querySelectorAll('.info-card');
+                    infoCards.forEach(card => {
+                        card.style.width = '';
+                        card.style.height = '';
+                        card.style.minWidth = '';
+                        card.style.minHeight = '';
+                        card.style.maxWidth = '';
+                        card.style.maxHeight = '';
+                        card.style.flex = '';
+                        card.style.display = '';
+                        card.style.flexDirection = '';
+                        card.style.justifyContent = '';
+                        card.style.alignItems = '';
+                        card.style.boxSizing = '';
+                    });
+                }, 10);
+
+                // Restore original SVG dasharray for radius (115px)
+                const originalCircumference = 2 * Math.PI * 115; // ≈ 723
+                progressCircle.style.strokeDasharray = originalCircumference;
+                progressCircle.style.strokeDashoffset = originalCircumference;
+
+                // Update icon back to expand
+                const icon = document.querySelector('.focus-label i');
+                icon.className = 'fas fa-expand me-1';
+            }
+        }
+
         function updateProgress(timeLeft, totalTime) {
-            const circumference = 2 * Math.PI * 115;  // Nowy promień: 115px
+            // Użyj odpowiedniego promienia w zależności od trybu
+            const radius = focusModeActive ? 200 : 115;
+            const circumference = 2 * Math.PI * radius;
             const progress = (totalTime - timeLeft) / totalTime;
             const offset = circumference - (progress * circumference);
             progressCircle.style.strokeDashoffset = offset;
@@ -400,14 +665,36 @@
             if (state.is_running) {
                 if (state.is_break) {
                     progressCircle.style.stroke = '#ffc107';  // Żółty dla przerwy
-                    timerDisplay.style.color = '#ffc107';
+                    timerDisplay.style.color = focusModeActive ? '#ffffff' : '#ffc107';
+
+                    // W Zen Mode zmień tło na żółte (przerwa)
+                    if (focusModeActive) {
+                        document.body.classList.add('break-phase');
+                    }
                 } else {
                     progressCircle.style.stroke = '#28a745';  // Zielony dla pracy
-                    timerDisplay.style.color = '#28a745';
+                    timerDisplay.style.color = focusModeActive ? '#ffffff' : '#28a745';
+
+                    // W Zen Mode tło zielone (praca)
+                    if (focusModeActive) {
+                        document.body.classList.remove('break-phase');
+                    }
                 }
             } else {
                 progressCircle.style.stroke = '#6c757d';     // Szary gdy zatrzymany
-                timerDisplay.style.color = '#333';
+                timerDisplay.style.color = focusModeActive ? '#ffffff' : '#333';
+
+                // Reset tła do domyślnego (zielony) gdy nie działa
+                if (focusModeActive) {
+                    document.body.classList.remove('break-phase');
+                }
+
+                // Auto-wyłącz Focus Mode gdy timer się kończy lub zostaje zatrzymany
+                if (focusModeActive && state.time_left === 0) {
+                    setTimeout(() => {
+                        toggleFocusMode(false);
+                    }, 1000); // 1 sekunda opóźnienia dla płynności
+                }
             }
 
             // Aktualizacja przycisków
@@ -522,8 +809,27 @@
                 updateUI(data.timer_state);
                 clearInterval(updateInterval);
                 pauseBtn.innerHTML = '<i class="fas fa-pause me-2"></i>Pauza';
+
+                // Auto-wyłącz Focus Mode przy zatrzymaniu timera
+                if (focusModeActive) {
+                    setTimeout(() => {
+                        toggleFocusMode(false);
+                    }, 500);
+                }
             })
             .catch(error => console.error('Błąd:', error));
+        });
+
+        // Focus Mode Toggle Event Listener
+        focusToggle.addEventListener('change', (e) => {
+            toggleFocusMode(e.target.checked);
+        });
+
+        // Escape key to exit Focus Mode
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && focusModeActive) {
+                toggleFocusMode(false);
+            }
         });
 
         // Aktualizacja podglądu przy zmianie ustawień
