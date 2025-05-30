@@ -33,27 +33,46 @@ def timer_worker():
             time.sleep(1)
             timer_state['time_left'] -= 1
         else:
-            # Czas się skończył - nalicz sesję
-            timer_state['current_session'] += 1
-
-            # Sprawdź czy wszystkie sesje zostały ukończone
-            if timer_state['current_session'] >= timer_state['total_sessions']:
-                # Wszystkie sesje zakończone - koniec timera
-                timer_state['is_running'] = False
-                break
+            # Czas się skończył
+            print(
+                f"DEBUG: Time finished. Current session: {timer_state['current_session']}, is_break: {timer_state['is_break']}")
 
             if timer_state['is_break']:
-                # Koniec przerwy → przejdź do pracy
+                # Koniec przerwy
+                timer_state['current_session'] += 1  # Nalicz sesję przerwy
+                print(
+                    f"DEBUG: Break ended. Session incremented to: {timer_state['current_session']}/{timer_state['total_sessions']}")
+
+                # Sprawdź czy to była ostatnia sesja
+                if timer_state['current_session'] >= timer_state['total_sessions']:
+                    print(
+                        f"DEBUG: All sessions completed! Stopping timer. Final: {timer_state['current_session']}/{timer_state['total_sessions']}")
+                    timer_state['is_running'] = False
+                    break
+
+                # Przełącz na pracę i nalicz cykl
                 timer_state['is_break'] = False
                 timer_state['time_left'] = round(timer_state['work_duration'] * 60)
-
-                # Nalicz cykl po ukończeniu przerwy (praca + przerwa = 1 cykl)
                 timer_state['current_cycle'] += 1
+                print(f"DEBUG: Switched to work. Cycle: {timer_state['current_cycle']}/{timer_state['cycles']}")
 
             else:
-                # Koniec pracy → przejdź do przerwy
+                # Koniec pracy
+                timer_state['current_session'] += 1  # Nalicz sesję pracy
+                print(
+                    f"DEBUG: Work ended. Session incremented to: {timer_state['current_session']}/{timer_state['total_sessions']}")
+
+                # Sprawdź czy to była ostatnia sesja
+                if timer_state['current_session'] >= timer_state['total_sessions']:
+                    print(
+                        f"DEBUG: All sessions completed! Stopping timer. Final: {timer_state['current_session']}/{timer_state['total_sessions']}")
+                    timer_state['is_running'] = False
+                    break
+
+                # Przełącz na przerwę
                 timer_state['is_break'] = True
                 timer_state['time_left'] = round(timer_state['break_duration'] * 60)
+                print(f"DEBUG: Switched to break. Time: {timer_state['time_left']}s")
 
 
 @app.route('/')
