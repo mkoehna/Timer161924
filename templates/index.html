@@ -210,24 +210,41 @@
                     </h3>
                     <form id="timer-form">
                         <div class="row">
+                            <!-- Czas pracy -->
                             <div class="col-md-4 mb-3">
-                                <label for="work-duration" class="form-label">
+                                <label class="form-label">
                                     <i class="fas fa-briefcase text-success me-2"></i>
-                                    Czas pracy (minuty)
+                                    Czas pracy
                                 </label>
-                                <input type="text" class="form-control" id="work-duration" value="25" placeholder="np. 25 lub 2.5">
-                                <small class="form-text text-muted">Czas skupienia na zadaniu<br>
-                                <strong>Przykłady:</strong> 25, 2.5 (2min 30s), 0.5 (30s), 0.017 (1s)</small>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <input type="number" class="form-control" id="work-minutes" value="25" min="0" max="120">
+                                        <small class="form-text text-muted">Minuty</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" class="form-control" id="work-seconds" value="0" min="0" max="59">
+                                        <small class="form-text text-muted">Sekundy</small>
+                                    </div>
+                                </div>
                             </div>
+                            <!-- Czas przerwy -->
                             <div class="col-md-4 mb-3">
-                                <label for="break-duration" class="form-label">
+                                <label class="form-label">
                                     <i class="fas fa-coffee text-warning me-2"></i>
-                                    Czas przerwy (minuty)
+                                    Czas przerwy
                                 </label>
-                                <input type="text" class="form-control" id="break-duration" value="5" placeholder="np. 5 lub 1.5">
-                                <small class="form-text text-muted">Czas na odpoczynek<br>
-                                <strong>Przykłady:</strong> 5, 1.5 (1min 30s), 0.25 (15s)</small>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <input type="number" class="form-control" id="break-minutes" value="5" min="0" max="60">
+                                        <small class="form-text text-muted">Minuty</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" class="form-control" id="break-seconds" value="0" min="0" max="59">
+                                        <small class="form-text text-muted">Sekundy</small>
+                                    </div>
+                                </div>
                             </div>
+                            <!-- Liczba cykli -->
                             <div class="col-md-4 mb-3">
                                 <label for="cycles" class="form-label">
                                     <i class="fas fa-redo text-info me-2"></i>
@@ -242,7 +259,7 @@
                         <div class="mt-4 p-3 bg-light rounded">
                             <h5><i class="fas fa-eye text-primary me-2"></i>Podgląd sesji:</h5>
                             <div id="session-preview" class="text-muted">
-                                4 cykle × (25 min pracy + 5 min przerwy) = <strong>2 godz.</strong>
+                                4 cykle × (25min pracy + 5min przerwy) = <strong>2h</strong>
                             </div>
                         </div>
                     </form>
@@ -271,8 +288,10 @@
         const pauseBtn = document.getElementById('pause-btn');
         const stopBtn = document.getElementById('stop-btn');
 
-        const workDurationInput = document.getElementById('work-duration');
-        const breakDurationInput = document.getElementById('break-duration');
+        const workMinutesInput = document.getElementById('work-minutes');
+        const workSecondsInput = document.getElementById('work-seconds');
+        const breakMinutesInput = document.getElementById('break-minutes');
+        const breakSecondsInput = document.getElementById('break-seconds');
         const cyclesInput = document.getElementById('cycles');
 
         // Funkcje pomocnicze
@@ -282,52 +301,35 @@
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        function parseDecimalMinutes(input) {
-            // Obsługa zarówno . jak i , jako separator dziesiętny
-            let cleanInput = input.toString().replace(',', '.');
+        function parseTimeInputs(minutesInput, secondsInput) {
+            const minutes = parseInt(minutesInput.value) || 0;
+            const seconds = parseInt(secondsInput.value) || 0;
 
-            // Sprawdź czy to poprawna liczba
-            const number = parseFloat(cleanInput);
-            if (isNaN(number) || number < 0) {
-                throw new Error('Nieprawidłowa wartość');
+            if (minutes < 0 || seconds < 0 || seconds > 59) {
+                throw new Error('Nieprawidłowe wartości czasu');
             }
 
-            // Ograniczenie do 3 miejsc po przecinku (dokładność do sekundy)
-            const rounded = Math.round(number * 1000) / 1000;
+            const totalSeconds = (minutes * 60) + seconds;
 
-            // Konwertuj na sekundy
-            const totalSeconds = Math.round(rounded * 60);
+            if (totalSeconds === 0) {
+                throw new Error('Czas musi być większy niż 0');
+            }
 
             return {
-                minutes: rounded,
-                seconds: totalSeconds,
-                formatted: formatDecimalTime(rounded)
+                minutes: minutes,
+                seconds: seconds,
+                totalSeconds: totalSeconds,
+                formatted: formatTimeDisplay(minutes, seconds)
             };
         }
 
-        function formatDecimalTime(decimalMinutes) {
-            const totalSeconds = Math.round(decimalMinutes * 60);
-            const mins = Math.floor(totalSeconds / 60);
-            const secs = totalSeconds % 60;
-
-            if (mins === 0) {
-                return `${secs}s`;
-            } else if (secs === 0) {
-                return `${mins}min`;
+        function formatTimeDisplay(minutes, seconds) {
+            if (minutes === 0) {
+                return `${seconds}s`;
+            } else if (seconds === 0) {
+                return `${minutes}min`;
             } else {
-                return `${mins}min ${secs}s`;
-            }
-        }
-
-        function validateTimeInput(input, minValue = 0, maxValue = 120) {
-            try {
-                const parsed = parseDecimalMinutes(input);
-                if (parsed.minutes < minValue || parsed.minutes > maxValue) {
-                    throw new Error(`Wartość musi być między ${minValue} a ${maxValue} minutami`);
-                }
-                return parsed;
-            } catch (error) {
-                throw error;
+                return `${minutes}min ${seconds}s`;
             }
         }
 
@@ -340,34 +342,41 @@
 
         function updateSessionPreview() {
             try {
-                const workInput = workDurationInput.value.trim() || '25';
-                const breakInput = breakDurationInput.value.trim() || '5';
+                const workTime = parseTimeInputs(workMinutesInput, workSecondsInput);
+                const breakTime = parseTimeInputs(breakMinutesInput, breakSecondsInput);
                 const cycles = parseInt(cyclesInput.value) || 4;
 
-                const workTime = parseDecimalMinutes(workInput);
-                const breakTime = parseDecimalMinutes(breakInput);
-
-                const totalMinutes = cycles * (workTime.minutes + breakTime.minutes);
-                const hours = Math.floor(totalMinutes / 60);
-                const minutes = Math.round((totalMinutes % 60) * 100) / 100;
+                const totalSeconds = cycles * (workTime.totalSeconds + breakTime.totalSeconds);
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
 
                 let timeString = '';
                 if (hours > 0) {
                     timeString = `${hours}h`;
                     if (minutes > 0) {
-                        timeString += ` ${minutes.toFixed(1)}min`;
+                        timeString += ` ${minutes}min`;
+                    }
+                    if (seconds > 0) {
+                        timeString += ` ${seconds}s`;
+                    }
+                } else if (minutes > 0) {
+                    timeString = `${minutes}min`;
+                    if (seconds > 0) {
+                        timeString += ` ${seconds}s`;
                     }
                 } else {
-                    timeString = `${totalMinutes.toFixed(1)}min`;
+                    timeString = `${seconds}s`;
                 }
 
                 sessionPreview.innerHTML = `
                     ${cycles} cykli × (${workTime.formatted} pracy + ${breakTime.formatted} przerwy) = <strong>${timeString}</strong>
                 `;
 
-                // Usuń błąd jeśli był
-                workDurationInput.classList.remove('is-invalid');
-                breakDurationInput.classList.remove('is-invalid');
+                // Usuń błędy jeśli były
+                [workMinutesInput, workSecondsInput, breakMinutesInput, breakSecondsInput].forEach(input => {
+                    input.classList.remove('is-invalid');
+                });
 
             } catch (error) {
                 sessionPreview.innerHTML = `
@@ -424,13 +433,9 @@
         // Event listenery
         startBtn.addEventListener('click', () => {
             try {
-                const workInput = workDurationInput.value.trim();
-                const breakInput = breakDurationInput.value.trim();
+                const workTime = parseTimeInputs(workMinutesInput, workSecondsInput);
+                const breakTime = parseTimeInputs(breakMinutesInput, breakSecondsInput);
                 const cycles = parseInt(cyclesInput.value);
-
-                // Walidacja i parsowanie czasu pracy
-                const workTime = validateTimeInput(workInput, 0.017, 120); // min 1 sekunda (0.017 min)
-                const breakTime = validateTimeInput(breakInput, 0.017, 60);  // min 1 sekunda
 
                 // Walidacja cykli
                 if (cycles < 1 || cycles > 20) {
@@ -438,9 +443,20 @@
                     return;
                 }
 
+                // Walidacja maksymalnego czasu (120 minut = 7200 sekund)
+                if (workTime.totalSeconds > 7200) {
+                    alert('Czas pracy nie może przekraczać 120 minut');
+                    return;
+                }
+                if (breakTime.totalSeconds > 3600) {
+                    alert('Czas przerwy nie może przekraczać 60 minut');
+                    return;
+                }
+
                 // Usuń oznaczenia błędów
-                workDurationInput.classList.remove('is-invalid');
-                breakDurationInput.classList.remove('is-invalid');
+                [workMinutesInput, workSecondsInput, breakMinutesInput, breakSecondsInput].forEach(input => {
+                    input.classList.remove('is-invalid');
+                });
 
                 fetch('/api/start', {
                     method: 'POST',
@@ -448,8 +464,8 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        work_duration: workTime.minutes,      // Wyślij jako ułamek dziesiętny
-                        break_duration: breakTime.minutes,    // Wyślij jako ułamek dziesiętny
+                        work_duration: workTime.totalSeconds / 60,      // Konwertuj na ułamek minut dla backend
+                        break_duration: breakTime.totalSeconds / 60,    // Konwertuj na ułamek minut dla backend
                         cycles: cycles
                     })
                 })
@@ -470,12 +486,12 @@
             } catch (error) {
                 alert(error.message);
 
-                // Oznacz nieprawidłowe pole
-                if (error.message.includes('pracy')) {
-                    workDurationInput.classList.add('is-invalid');
-                } else if (error.message.includes('przerwy')) {
-                    breakDurationInput.classList.add('is-invalid');
-                }
+                // Oznacz nieprawidłowe pola
+                [workMinutesInput, workSecondsInput, breakMinutesInput, breakSecondsInput].forEach(input => {
+                    if (input.value && (parseInt(input.value) < 0 || (input.id.includes('seconds') && parseInt(input.value) > 59))) {
+                        input.classList.add('is-invalid');
+                    }
+                });
             }
         });
 
@@ -511,7 +527,7 @@
         });
 
         // Aktualizacja podglądu przy zmianie ustawień
-        [workDurationInput, breakDurationInput, cyclesInput].forEach(input => {
+        [workMinutesInput, workSecondsInput, breakMinutesInput, breakSecondsInput, cyclesInput].forEach(input => {
             input.addEventListener('input', updateSessionPreview);
         });
 
