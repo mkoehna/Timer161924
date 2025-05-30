@@ -66,6 +66,8 @@
             letter-spacing: 1px;
             transition: all 0.3s ease;
             margin: 0.5rem;
+            min-width: 120px;  /* Stała minimalna szerokość dla wszystkich */
+            text-align: center;
         }
 
         .btn-timer:hover {
@@ -296,13 +298,11 @@
         }
 
         /* Zen Mode - Focus Toggle */
-        .zen-focus-mode .focus-label {
-            color: rgba(255, 255, 255, 0.8) !important;
-        }
-
-        .zen-focus-mode .focus-toggle:checked {
-            background-color: #ffffff !important;
-            border-color: #ffffff !important;
+        .zen-focus-mode .btn-info.btn-timer {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            color: #ffffff !important;
+            backdrop-filter: blur(10px) !important;
         }
 
         /* Zen Mode - Minimized Session Info */
@@ -363,7 +363,7 @@
                             <div id="timer-display" class="timer-display">00:00</div>
                         </div>
 
-                        <!-- Przyciski sterowania i Focus toggle -->
+                        <!-- Przyciski sterowania i Focus button -->
                         <div class="mt-4">
                             <button id="start-btn" class="btn btn-success btn-timer">
                                 <i class="fas fa-play me-2"></i>Start
@@ -375,15 +375,10 @@
                                 <i class="fas fa-stop me-2"></i>Stop
                             </button>
 
-                            <!-- Focus Mode Toggle -->
-                            <div class="focus-toggle-wrapper d-inline-block ms-3">
-                                <div class="form-check form-switch d-inline-flex align-items-center">
-                                    <input class="form-check-input focus-toggle" type="checkbox" id="focus-toggle">
-                                    <label class="form-check-label ms-2 focus-label" for="focus-toggle">
-                                        <i class="fas fa-expand me-1"></i>Focus
-                                    </label>
-                                </div>
-                            </div>
+                            <!-- Focus Mode Button -->
+                            <button id="focus-btn" class="btn btn-info btn-timer">
+                                <i class="fas fa-expand me-2"></i>Focus
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -480,7 +475,7 @@
         const breakSecondsInput = document.getElementById('break-seconds');
         const cyclesInput = document.getElementById('cycles');
 
-        const focusToggle = document.getElementById('focus-toggle');
+        const focusBtn = document.getElementById('focus-btn');
         let focusModeActive = false;
 
         // Funkcje pomocnicze
@@ -527,9 +522,11 @@
             if (enable) {
                 document.body.classList.add('zen-focus-mode');
                 focusModeActive = true;
-                focusToggle.checked = true;
 
-                // FORCE exact dimensions with JavaScript
+                // Update button text and icon
+                focusBtn.innerHTML = '<i class="fas fa-compress me-2"></i>Exit';
+
+                // FORCE exact dimensions for info cards
                 setTimeout(() => {
                     const infoCards = document.querySelectorAll('.info-card');
                     infoCards.forEach(card => {
@@ -546,16 +543,56 @@
                         card.style.alignItems = 'center';
                         card.style.boxSizing = 'border-box';
                     });
-                }, 10); // Small delay to ensure DOM is ready
+                }, 10);
 
-                // Update SVG dasharray for new radius (200px)
-                const newCircumference = 2 * Math.PI * 200; // ≈ 1256
-                progressCircle.style.strokeDasharray = newCircumference;
-                progressCircle.style.strokeDashoffset = newCircumference;
+                // FORCE exact dimensions for timer - 40% ekranu
+                setTimeout(() => {
+                    const screenHeight = window.innerHeight;
+                    const timerHeight = screenHeight * 0.4; // 40% ekranu
 
-                // Update icon to compress when active
-                const icon = document.querySelector('.focus-label i');
-                icon.className = 'fas fa-compress me-1';
+                    const timerDisplay = document.getElementById('timer-display');
+                    const timerContainer = timerDisplay.parentElement;
+
+                    // Force timer font size to exactly 40vh
+                    timerDisplay.style.fontSize = '40vh';
+                    timerDisplay.style.height = '40vh';
+                    timerDisplay.style.lineHeight = '1';
+                    timerDisplay.style.display = 'flex';
+                    timerDisplay.style.alignItems = 'center';
+                    timerDisplay.style.justifyContent = 'center';
+
+                    // Force SVG container
+                    timerContainer.style.height = '40vh';
+                    timerContainer.style.display = 'flex';
+                    timerContainer.style.alignItems = 'center';
+                    timerContainer.style.justifyContent = 'center';
+
+                    // Force SVG size - proportional to timer
+                    const svg = timerContainer.querySelector('svg');
+                    if (svg) {
+                        svg.style.width = '45vh';
+                        svg.style.height = '45vh';
+
+                        // Update circle attributes
+                        const circles = svg.querySelectorAll('circle');
+                        const svgSize = screenHeight * 0.45; // 45vh in pixels
+                        const radius = svgSize * 0.45; // 45% of SVG size
+                        const center = svgSize * 0.5;   // Center point
+                        const strokeWidth = svgSize * 0.03; // 3% of SVG size
+
+                        circles.forEach(circle => {
+                            circle.setAttribute('r', radius);
+                            circle.setAttribute('cx', center);
+                            circle.setAttribute('cy', center);
+                            circle.setAttribute('stroke-width', strokeWidth);
+                        });
+
+                        // Update progress circle dasharray for new radius
+                        const newCircumference = 2 * Math.PI * radius;
+                        progressCircle.style.strokeDasharray = newCircumference;
+                        progressCircle.style.strokeDashoffset = newCircumference;
+                    }
+                }, 20); // Slightly longer delay for SVG
 
                 // Scroll to top for full immersion
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -564,9 +601,11 @@
                 document.body.classList.remove('zen-focus-mode');
                 document.body.classList.remove('break-phase');
                 focusModeActive = false;
-                focusToggle.checked = false;
 
-                // RESTORE original dimensions
+                // Update button text and icon back
+                focusBtn.innerHTML = '<i class="fas fa-expand me-2"></i>Focus';
+
+                // RESTORE original dimensions for info cards
                 setTimeout(() => {
                     const infoCards = document.querySelectorAll('.info-card');
                     infoCards.forEach(card => {
@@ -585,20 +624,61 @@
                     });
                 }, 10);
 
-                // Restore original SVG dasharray for radius (115px)
-                const originalCircumference = 2 * Math.PI * 115; // ≈ 723
-                progressCircle.style.strokeDasharray = originalCircumference;
-                progressCircle.style.strokeDashoffset = originalCircumference;
+                // RESTORE original timer dimensions
+                setTimeout(() => {
+                    const timerDisplay = document.getElementById('timer-display');
+                    const timerContainer = timerDisplay.parentElement;
 
-                // Update icon back to expand
-                const icon = document.querySelector('.focus-label i');
-                icon.className = 'fas fa-expand me-1';
+                    // Reset timer styles
+                    timerDisplay.style.fontSize = '';
+                    timerDisplay.style.height = '';
+                    timerDisplay.style.lineHeight = '';
+                    timerDisplay.style.display = '';
+                    timerDisplay.style.alignItems = '';
+                    timerDisplay.style.justifyContent = '';
+
+                    // Reset container
+                    timerContainer.style.height = '';
+                    timerContainer.style.display = '';
+                    timerContainer.style.alignItems = '';
+                    timerContainer.style.justifyContent = '';
+
+                    // Reset SVG
+                    const svg = timerContainer.querySelector('svg');
+                    if (svg) {
+                        svg.style.width = '';
+                        svg.style.height = '';
+
+                        // Reset circle attributes to original values
+                        const circles = svg.querySelectorAll('circle');
+                        circles.forEach(circle => {
+                            circle.setAttribute('r', '115');
+                            circle.setAttribute('cx', '145');
+                            circle.setAttribute('cy', '145');
+                            circle.setAttribute('stroke-width', '8');
+                        });
+
+                        // Restore original SVG dasharray for radius (115px)
+                        const originalCircumference = 2 * Math.PI * 115;
+                        progressCircle.style.strokeDasharray = originalCircumference;
+                        progressCircle.style.strokeDashoffset = originalCircumference;
+                    }
+                }, 20);
             }
         }
 
         function updateProgress(timeLeft, totalTime) {
             // Użyj odpowiedniego promienia w zależności od trybu
-            const radius = focusModeActive ? 200 : 115;
+            let radius;
+            if (focusModeActive) {
+                // W Zen Mode promień jest dynamiczny - 45% z 45vh
+                const screenHeight = window.innerHeight;
+                const svgSize = screenHeight * 0.45; // 45vh
+                radius = svgSize * 0.45; // 45% of SVG size
+            } else {
+                radius = 115; // Normalny tryb
+            }
+
             const circumference = 2 * Math.PI * radius;
             const progress = (totalTime - timeLeft) / totalTime;
             const offset = circumference - (progress * circumference);
@@ -820,9 +900,9 @@
             .catch(error => console.error('Błąd:', error));
         });
 
-        // Focus Mode Toggle Event Listener
-        focusToggle.addEventListener('change', (e) => {
-            toggleFocusMode(e.target.checked);
+        // Focus Mode Button Event Listener
+        focusBtn.addEventListener('click', () => {
+            toggleFocusMode(!focusModeActive);
         });
 
         // Escape key to exit Focus Mode
