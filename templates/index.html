@@ -32,7 +32,7 @@
         .info-card {
             background: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
-            padding: 15px;
+            padding: 10px 15px;  /* Zmniejszone z 15px na 10px (góra/dół) */
             margin: 5px;
             border: 2px solid #e9ecef;
             transition: all 0.3s ease;
@@ -148,14 +148,9 @@
                 <div class="card timer-card mb-4">
                     <div class="card-body text-center p-5">
 
-                        <!-- Status, Sesja i Cykl na górze -->
-                        <div class="row mb-4">
-                            <div class="col-md-4">
-                                <div id="status-badge" class="status-badge stopped-status w-100">
-                                    <i class="fas fa-stop me-2"></i>Zatrzymany
-                                </div>
-                            </div>
-                            <div class="col-md-4">
+                        <!-- Sesja i Cykl na górze -->
+                        <div class="row mb-5">
+                            <div class="col-md-6">
                                 <div class="info-card">
                                     <div class="info-label">Sesja</div>
                                     <div class="info-value">
@@ -163,7 +158,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="info-card">
                                     <div class="info-label">Cykl</div>
                                     <div class="info-value">
@@ -175,17 +170,17 @@
 
                         <!-- Wyświetlacz czasu z kołem postępu -->
                         <div class="position-relative d-inline-block mb-4">
-                            <svg width="300" height="300" class="position-absolute top-50 start-50 translate-middle">
-                                <circle cx="150" cy="150" r="120" fill="none" stroke="#e9ecef" stroke-width="8"/>
+                            <svg width="290" height="290" class="position-absolute top-50 start-50 translate-middle">
+                                <circle cx="145" cy="145" r="115" fill="none" stroke="#e9ecef" stroke-width="8"/>
                                 <circle
                                     id="progress-circle"
-                                    cx="150" cy="150" r="120"
+                                    cx="145" cy="145" r="115"
                                     fill="none"
                                     stroke="#667eea"
                                     stroke-width="8"
                                     stroke-linecap="round"
-                                    stroke-dasharray="754"
-                                    stroke-dashoffset="754"
+                                    stroke-dasharray="723"
+                                    stroke-dashoffset="723"
                                     class="progress-circle progress-ring"
                                 />
                             </svg>
@@ -265,7 +260,6 @@
 
         // Elementy DOM
         const timerDisplay = document.getElementById('timer-display');
-        const statusBadge = document.getElementById('status-badge');
         const currentSessionSpan = document.getElementById('current-session');
         const totalSessionsSpan = document.getElementById('total-sessions');
         const currentCycleSpan = document.getElementById('current-cycle');
@@ -338,7 +332,7 @@
         }
 
         function updateProgress(timeLeft, totalTime) {
-            const circumference = 2 * Math.PI * 120;
+            const circumference = 2 * Math.PI * 115;  // Nowy promień: 115px
             const progress = (totalTime - timeLeft) / totalTime;
             const offset = circumference - (progress * circumference);
             progressCircle.style.strokeDashoffset = offset;
@@ -393,36 +387,18 @@
             currentCycleSpan.textContent = state.current_cycle + 1;
             totalCyclesSpan.textContent = state.cycles;
 
-            // Aktualizacja statusu
+            // Zmiana koloru okręgu i timera w zależności od fazy
             if (state.is_running) {
                 if (state.is_break) {
-                    statusBadge.className = 'status-badge break-status';
-                    statusBadge.innerHTML = `
-                        <div class="info-label">STATUS</div>
-                        <div class="info-value">
-                            <i class="fas fa-coffee me-2"></i>Przerwa
-                        </div>
-                    `;
-                    progressCircle.style.stroke = '#ffc107';
+                    progressCircle.style.stroke = '#ffc107';  // Żółty dla przerwy
+                    timerDisplay.style.color = '#ffc107';
                 } else {
-                    statusBadge.className = 'status-badge work-status';
-                    statusBadge.innerHTML = `
-                        <div class="info-label">STATUS</div>
-                        <div class="info-value">
-                            <i class="fas fa-play me-2"></i>Praca
-                        </div>
-                    `;
-                    progressCircle.style.stroke = '#28a745';
+                    progressCircle.style.stroke = '#28a745';  // Zielony dla pracy
+                    timerDisplay.style.color = '#28a745';
                 }
             } else {
-                statusBadge.className = 'status-badge stopped-status';
-                statusBadge.innerHTML = `
-                    <div class="info-label">STATUS</div>
-                    <div class="info-value">
-                        <i class="fas fa-stop me-2"></i>Zatrzymany
-                    </div>
-                `;
-                progressCircle.style.stroke = '#6c757d';
+                progressCircle.style.stroke = '#6c757d';     // Szary gdy zatrzymany
+                timerDisplay.style.color = '#333';
             }
 
             // Aktualizacja przycisków
