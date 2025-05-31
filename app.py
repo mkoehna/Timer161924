@@ -74,6 +74,9 @@ def timer_worker():
                 timer_state['time_left'] = round(timer_state['break_duration'] * 60)
                 print(f"DEBUG: Switched to break. Time: {timer_state['time_left']}s")
 
+            if not timer_state['is_running']:
+                break
+
 
 @app.route('/')
 def index():
@@ -115,8 +118,8 @@ def start_timer():
             'break_duration': break_duration_decimal,  # Zachowaj ułamek dla frontend
             'cycles': cycles,
             'is_running': True,
-            'current_session': 0,  # Aktualna sesja (0-7 dla 4 cykli)
-            'current_cycle': 0,  # Aktualny cykl (0-3 dla 4 cykli)
+            'current_session': 0,
+            'current_cycle': 0,
             'is_break': False,
             'time_left': work_duration_seconds,  # Sekundy dla odliczania
             'total_sessions': cycles * 2,  # Każdy cykl = 2 sesje (praca + przerwa)
