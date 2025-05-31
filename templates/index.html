@@ -32,7 +32,7 @@
         .info-card {
             background: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
-            padding: 10px 15px;  /* Zmniejszone z 15px na 10px (góra/dół) */
+            padding: 10px 15px;
             margin: 5px;
             border: 2px solid #e9ecef;
             transition: all 0.3s ease;
@@ -66,7 +66,7 @@
             letter-spacing: 1px;
             transition: all 0.3s ease;
             margin: 0.5rem;
-            min-width: 120px;  /* Stała minimalna szerokość dla wszystkich */
+            min-width: 120px;
             text-align: center;
         }
 
@@ -314,6 +314,26 @@
         .container, .timer-card, .card-body, .timer-display, .info-card, .btn-timer {
             transition: all 0.5s ease-in-out;
         }
+
+        /* Focus Mode Settings */
+        .focus-settings {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .focus-settings h6 {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+
+        .form-check-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -436,6 +456,37 @@
                             </div>
                         </div>
 
+                        <!-- Focus Mode Settings -->
+                        <div class="focus-settings">
+                            <h6><i class="fas fa-eye me-2"></i>Ustawienia Focus Mode</h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="auto-enable-focus">
+                                        <label class="form-check-label" for="auto-enable-focus">
+                                            Auto-włącz przy starcie
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="auto-disable-completion" checked>
+                                        <label class="form-check-label" for="auto-disable-completion">
+                                            Auto-wyłącz po zakończeniu
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="auto-disable-stop" checked>
+                                        <label class="form-check-label" for="auto-disable-stop">
+                                            Auto-wyłącz przy zatrzymaniu
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Podgląd ustawień -->
                         <div class="mt-4 p-3 bg-light rounded">
                             <h5><i class="fas fa-eye text-primary me-2"></i>Podgląd sesji:</h5>
@@ -455,6 +506,8 @@
     <script>
         let updateInterval;
         let isRunning = false;
+        let focusModeActive = false;
+        let lastFocusState = null;
 
         // Elementy DOM
         const timerDisplay = document.getElementById('timer-display');
@@ -468,6 +521,7 @@
         const startBtn = document.getElementById('start-btn');
         const pauseBtn = document.getElementById('pause-btn');
         const stopBtn = document.getElementById('stop-btn');
+        const focusBtn = document.getElementById('focus-btn');
 
         const workMinutesInput = document.getElementById('work-minutes');
         const workSecondsInput = document.getElementById('work-seconds');
@@ -475,8 +529,10 @@
         const breakSecondsInput = document.getElementById('break-seconds');
         const cyclesInput = document.getElementById('cycles');
 
-        const focusBtn = document.getElementById('focus-btn');
-        let focusModeActive = false;
+        // Focus Mode Settings
+        const autoEnableFocusInput = document.getElementById('auto-enable-focus');
+        const autoDisableCompletionInput = document.getElementById('auto-disable-completion');
+        const autoDisableStopInput = document.getElementById('auto-disable-stop');
 
         // Funkcje pomocnicze
         function formatTime(seconds) {
@@ -518,81 +574,23 @@
         }
 
         // Focus Mode Functions
-        function toggleFocusMode(enable) {
+        function applyFocusMode(enable, isBreak = false) {
             if (enable) {
                 document.body.classList.add('zen-focus-mode');
+                if (isBreak) {
+                    document.body.classList.add('break-phase');
+                } else {
+                    document.body.classList.remove('break-phase');
+                }
                 focusModeActive = true;
 
                 // Update button text and icon
                 focusBtn.innerHTML = '<i class="fas fa-compress me-2"></i>Exit';
 
-                // FORCE exact dimensions for info cards
+                // Apply exact dimensions after DOM update
                 setTimeout(() => {
-                    const infoCards = document.querySelectorAll('.info-card');
-                    infoCards.forEach(card => {
-                        card.style.width = '300px';
-                        card.style.height = '84px';
-                        card.style.minWidth = '300px';
-                        card.style.minHeight = '84px';
-                        card.style.maxWidth = '300px';
-                        card.style.maxHeight = '84px';
-                        card.style.flex = '0 0 300px';
-                        card.style.display = 'flex';
-                        card.style.flexDirection = 'column';
-                        card.style.justifyContent = 'center';
-                        card.style.alignItems = 'center';
-                        card.style.boxSizing = 'border-box';
-                    });
-                }, 10);
-
-                // FORCE exact dimensions for timer - 40% ekranu
-                setTimeout(() => {
-                    const screenHeight = window.innerHeight;
-                    const timerHeight = screenHeight * 0.4; // 40% ekranu
-
-                    const timerDisplay = document.getElementById('timer-display');
-                    const timerContainer = timerDisplay.parentElement;
-
-                    // Force timer font size to exactly 40vh
-                    timerDisplay.style.fontSize = '40vh';
-                    timerDisplay.style.height = '40vh';
-                    timerDisplay.style.lineHeight = '1';
-                    timerDisplay.style.display = 'flex';
-                    timerDisplay.style.alignItems = 'center';
-                    timerDisplay.style.justifyContent = 'center';
-
-                    // Force SVG container
-                    timerContainer.style.height = '40vh';
-                    timerContainer.style.display = 'flex';
-                    timerContainer.style.alignItems = 'center';
-                    timerContainer.style.justifyContent = 'center';
-
-                    // Force SVG size - proportional to timer
-                    const svg = timerContainer.querySelector('svg');
-                    if (svg) {
-                        svg.style.width = '45vh';
-                        svg.style.height = '45vh';
-
-                        // Update circle attributes
-                        const circles = svg.querySelectorAll('circle');
-                        const svgSize = screenHeight * 0.45; // 45vh in pixels
-                        const radius = svgSize * 0.45; // 45% of SVG size
-                        const center = svgSize * 0.5;   // Center point
-                        const strokeWidth = svgSize * 0.03; // 3% of SVG size
-
-                        circles.forEach(circle => {
-                            circle.setAttribute('r', radius);
-                            circle.setAttribute('cx', center);
-                            circle.setAttribute('cy', center);
-                            circle.setAttribute('stroke-width', strokeWidth);
-                        });
-
-                        // Update progress circle dasharray for new radius
-                        const newCircumference = 2 * Math.PI * radius;
-                        progressCircle.style.strokeDasharray = newCircumference;
-                        progressCircle.style.strokeDashoffset = newCircumference;
-                    }
-                }, 20); // Slightly longer delay for SVG
+                    applyFocusModeStyles();
+                }, 50);
 
                 // Scroll to top for full immersion
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -605,78 +603,145 @@
                 // Update button text and icon back
                 focusBtn.innerHTML = '<i class="fas fa-expand me-2"></i>Focus';
 
-                // RESTORE original dimensions for info cards
+                // Restore original dimensions
                 setTimeout(() => {
-                    const infoCards = document.querySelectorAll('.info-card');
-                    infoCards.forEach(card => {
-                        card.style.width = '';
-                        card.style.height = '';
-                        card.style.minWidth = '';
-                        card.style.minHeight = '';
-                        card.style.maxWidth = '';
-                        card.style.maxHeight = '';
-                        card.style.flex = '';
-                        card.style.display = '';
-                        card.style.flexDirection = '';
-                        card.style.justifyContent = '';
-                        card.style.alignItems = '';
-                        card.style.boxSizing = '';
-                    });
-                }, 10);
+                    restoreNormalModeStyles();
+                }, 50);
+            }
+        }
 
-                // RESTORE original timer dimensions
-                setTimeout(() => {
-                    const timerDisplay = document.getElementById('timer-display');
-                    const timerContainer = timerDisplay.parentElement;
+        function applyFocusModeStyles() {
+            // Force exact dimensions for info cards
+            const infoCards = document.querySelectorAll('.info-card');
+            infoCards.forEach(card => {
+                card.style.width = '300px';
+                card.style.height = '84px';
+                card.style.minWidth = '300px';
+                card.style.minHeight = '84px';
+                card.style.maxWidth = '300px';
+                card.style.maxHeight = '84px';
+                card.style.flex = '0 0 300px';
+                card.style.display = 'flex';
+                card.style.flexDirection = 'column';
+                card.style.justifyContent = 'center';
+                card.style.alignItems = 'center';
+                card.style.boxSizing = 'border-box';
+            });
 
-                    // Reset timer styles
-                    timerDisplay.style.fontSize = '';
-                    timerDisplay.style.height = '';
-                    timerDisplay.style.lineHeight = '';
-                    timerDisplay.style.display = '';
-                    timerDisplay.style.alignItems = '';
-                    timerDisplay.style.justifyContent = '';
+            // Force exact dimensions for timer - 40% ekranu
+            const screenHeight = window.innerHeight;
+            const timerDisplay = document.getElementById('timer-display');
+            const timerContainer = timerDisplay.parentElement;
 
-                    // Reset container
-                    timerContainer.style.height = '';
-                    timerContainer.style.display = '';
-                    timerContainer.style.alignItems = '';
-                    timerContainer.style.justifyContent = '';
+            // Force timer font size to exactly 40vh
+            timerDisplay.style.fontSize = '40vh';
+            timerDisplay.style.height = '40vh';
+            timerDisplay.style.lineHeight = '1';
+            timerDisplay.style.display = 'flex';
+            timerDisplay.style.alignItems = 'center';
+            timerDisplay.style.justifyContent = 'center';
 
-                    // Reset SVG
-                    const svg = timerContainer.querySelector('svg');
-                    if (svg) {
-                        svg.style.width = '';
-                        svg.style.height = '';
+            // Force SVG container
+            timerContainer.style.height = '40vh';
+            timerContainer.style.display = 'flex';
+            timerContainer.style.alignItems = 'center';
+            timerContainer.style.justifyContent = 'center';
 
-                        // Reset circle attributes to original values
-                        const circles = svg.querySelectorAll('circle');
-                        circles.forEach(circle => {
-                            circle.setAttribute('r', '115');
-                            circle.setAttribute('cx', '145');
-                            circle.setAttribute('cy', '145');
-                            circle.setAttribute('stroke-width', '8');
-                        });
+            // Force SVG size - proportional to timer
+            const svg = timerContainer.querySelector('svg');
+            if (svg) {
+                svg.style.width = '45vh';
+                svg.style.height = '45vh';
 
-                        // Restore original SVG dasharray for radius (115px)
-                        const originalCircumference = 2 * Math.PI * 115;
-                        progressCircle.style.strokeDasharray = originalCircumference;
-                        progressCircle.style.strokeDashoffset = originalCircumference;
-                    }
-                }, 20);
+                // Update circle attributes
+                const circles = svg.querySelectorAll('circle');
+                const svgSize = screenHeight * 0.45; // 45vh in pixels
+                const radius = svgSize * 0.45; // 45% of SVG size
+                const center = svgSize * 0.5;   // Center point
+                const strokeWidth = svgSize * 0.03; // 3% of SVG size
+
+                circles.forEach(circle => {
+                    circle.setAttribute('r', radius);
+                    circle.setAttribute('cx', center);
+                    circle.setAttribute('cy', center);
+                    circle.setAttribute('stroke-width', strokeWidth);
+                });
+
+                // Update progress circle dasharray for new radius
+                const newCircumference = 2 * Math.PI * radius;
+                progressCircle.style.strokeDasharray = newCircumference;
+                progressCircle.style.strokeDashoffset = newCircumference;
+            }
+        }
+
+        function restoreNormalModeStyles() {
+            // Restore original dimensions for info cards
+            const infoCards = document.querySelectorAll('.info-card');
+            infoCards.forEach(card => {
+                card.style.width = '';
+                card.style.height = '';
+                card.style.minWidth = '';
+                card.style.minHeight = '';
+                card.style.maxWidth = '';
+                card.style.maxHeight = '';
+                card.style.flex = '';
+                card.style.display = '';
+                card.style.flexDirection = '';
+                card.style.justifyContent = '';
+                card.style.alignItems = '';
+                card.style.boxSizing = '';
+            });
+
+            // Restore original timer dimensions
+            const timerDisplay = document.getElementById('timer-display');
+            const timerContainer = timerDisplay.parentElement;
+
+            // Reset timer styles
+            timerDisplay.style.fontSize = '';
+            timerDisplay.style.height = '';
+            timerDisplay.style.lineHeight = '';
+            timerDisplay.style.display = '';
+            timerDisplay.style.alignItems = '';
+            timerDisplay.style.justifyContent = '';
+
+            // Reset container
+            timerContainer.style.height = '';
+            timerContainer.style.display = '';
+            timerContainer.style.alignItems = '';
+            timerContainer.style.justifyContent = '';
+
+            // Reset SVG
+            const svg = timerContainer.querySelector('svg');
+            if (svg) {
+                svg.style.width = '';
+                svg.style.height = '';
+
+                // Reset circle attributes to original values
+                const circles = svg.querySelectorAll('circle');
+                circles.forEach(circle => {
+                    circle.setAttribute('r', '115');
+                    circle.setAttribute('cx', '145');
+                    circle.setAttribute('cy', '145');
+                    circle.setAttribute('stroke-width', '8');
+                });
+
+                // Restore original SVG dasharray for radius (115px)
+                const originalCircumference = 2 * Math.PI * 115;
+                progressCircle.style.strokeDasharray = originalCircumference;
+                progressCircle.style.strokeDashoffset = originalCircumference;
             }
         }
 
         function updateProgress(timeLeft, totalTime) {
-            // Użyj odpowiedniego promienia w zależności od trybu
+            // Use appropriate radius depending on mode
             let radius;
             if (focusModeActive) {
-                // W Zen Mode promień jest dynamiczny - 45% z 45vh
+                // In Zen Mode radius is dynamic - 45% of 45vh
                 const screenHeight = window.innerHeight;
                 const svgSize = screenHeight * 0.45; // 45vh
                 radius = svgSize * 0.45; // 45% of SVG size
             } else {
-                radius = 115; // Normalny tryb
+                radius = 115; // Normal mode
             }
 
             const circumference = 2 * Math.PI * radius;
@@ -718,7 +783,7 @@
                     ${cycles} cykli × (${workTime.formatted} pracy + ${breakTime.formatted} przerwy) = <strong>${timeString}</strong>
                 `;
 
-                // Usuń błędy jeśli były
+                // Remove errors if any
                 [workMinutesInput, workSecondsInput, breakMinutesInput, breakSecondsInput].forEach(input => {
                     input.classList.remove('is-invalid');
                 });
@@ -730,61 +795,100 @@
             }
         }
 
+        function handleFocusModeBackendChanges(focusState) {
+            // Check if backend requests focus mode exit
+            if (focusState.exit_requested && focusModeActive) {
+                // Backend wants us to exit focus mode
+                applyFocusMode(false);
+
+                // Acknowledge the exit to backend
+                fetch('/api/focus/acknowledge-exit', {
+                    method: 'POST'
+                }).catch(error => console.error('Błąd potwierdzenia wyjścia:', error));
+
+                return;
+            }
+
+            // Sync frontend state with backend state (but don't override user actions)
+            if (focusState.active !== focusModeActive && !focusState.exit_requested) {
+                // Only auto-sync if it's likely from backend automation
+                if (focusState.active && lastFocusState && !lastFocusState.active) {
+                    // Backend enabled focus mode (probably auto-enable on start)
+                    applyFocusMode(true);
+                }
+            }
+        }
+
         function updateUI(state) {
             timerDisplay.textContent = formatTime(state.time_left);
 
-            // Wyświetl sesje: aktualną sesję (1-indexowane) i total
+            // Display sessions: current session (1-indexed) and total
             currentSessionSpan.textContent = state.current_session + 1;
             totalSessionsSpan.textContent = state.total_sessions;
 
-            // Wyświetl cykle: aktualny cykl (1-indexowane) i total
+            // Display cycles: current cycle (1-indexed) and total
             currentCycleSpan.textContent = state.current_cycle + 1;
             totalCyclesSpan.textContent = state.cycles;
 
-            // Zmiana koloru okręgu i timera w zależności od fazy
+            // Handle focus mode backend changes
+            if (state.focus_mode) {
+                handleFocusModeBackendChanges(state.focus_mode);
+                lastFocusState = { ...state.focus_mode };
+            }
+
+            // Change circle and timer color depending on phase
             if (state.is_running) {
                 if (state.is_break) {
-                    progressCircle.style.stroke = '#ffc107';  // Żółty dla przerwy
+                    progressCircle.style.stroke = '#ffc107';  // Yellow for break
                     timerDisplay.style.color = focusModeActive ? '#ffffff' : '#ffc107';
 
-                    // W Zen Mode zmień tło na żółte (przerwa)
+                    // In Zen Mode change background to yellow (break)
                     if (focusModeActive) {
                         document.body.classList.add('break-phase');
                     }
                 } else {
-                    progressCircle.style.stroke = '#28a745';  // Zielony dla pracy
+                    progressCircle.style.stroke = '#28a745';  // Green for work
                     timerDisplay.style.color = focusModeActive ? '#ffffff' : '#28a745';
 
-                    // W Zen Mode tło zielone (praca)
+                    // In Zen Mode background green (work)
                     if (focusModeActive) {
                         document.body.classList.remove('break-phase');
                     }
                 }
             } else {
-                progressCircle.style.stroke = '#6c757d';     // Szary gdy zatrzymany
+                progressCircle.style.stroke = '#6c757d';     // Gray when stopped
                 timerDisplay.style.color = focusModeActive ? '#ffffff' : '#333';
 
-                // Reset tła do domyślnego (zielony) gdy nie działa
+                // Reset background to default (green) when not running
                 if (focusModeActive) {
                     document.body.classList.remove('break-phase');
                 }
-
-                // Auto-wyłącz Focus Mode gdy timer się kończy lub zostaje zatrzymany
-                if (focusModeActive && state.time_left === 0) {
-                    setTimeout(() => {
-                        toggleFocusMode(false);
-                    }, 1000); // 1 sekunda opóźnienia dla płynności
-                }
             }
 
-            // Aktualizacja przycisków
+            // Update buttons
             startBtn.disabled = state.is_running;
             pauseBtn.disabled = !state.is_running;
             stopBtn.disabled = !state.is_running && state.time_left === 0;
 
-            // Aktualizacja paska postępu
+            // Update progress bar
             const currentTotalTime = state.is_break ? Math.round(state.break_duration * 60) : Math.round(state.work_duration * 60);
             updateProgress(state.time_left, currentTotalTime);
+        }
+
+        function saveFocusSettings() {
+            const settings = {
+                auto_enable_on_start: autoEnableFocusInput.checked,
+                auto_disable_on_completion: autoDisableCompletionInput.checked,
+                auto_disable_on_stop: autoDisableStopInput.checked
+            };
+
+            fetch('/api/focus/settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(settings)
+            }).catch(error => console.error('Błąd zapisywania ustawień focus:', error));
         }
 
         function fetchStatus() {
@@ -793,24 +897,30 @@
                 .then(data => {
                     updateUI(data);
                     isRunning = data.is_running;
+
+                    // Update focus settings UI from backend
+                    if (data.focus_mode) {
+                        autoEnableFocusInput.checked = data.focus_mode.auto_enable_on_start;
+                        autoDisableCompletionInput.checked = data.focus_mode.auto_disable_on_completion;
+                        autoDisableStopInput.checked = data.focus_mode.auto_disable_on_stop;
+                    }
                 })
                 .catch(error => console.error('Błąd:', error));
         }
 
-        // Event listenery
+        // Event Listeners
         startBtn.addEventListener('click', () => {
             try {
                 const workTime = parseTimeInputs(workMinutesInput, workSecondsInput);
                 const breakTime = parseTimeInputs(breakMinutesInput, breakSecondsInput);
                 const cycles = parseInt(cyclesInput.value);
 
-                // Walidacja cykli
+                // Validation
                 if (cycles < 1 || cycles > 20) {
                     alert('Liczba cykli musi być między 1 a 20');
                     return;
                 }
 
-                // Walidacja maksymalnego czasu (120 minut = 7200 sekund)
                 if (workTime.totalSeconds > 7200) {
                     alert('Czas pracy nie może przekraczać 120 minut');
                     return;
@@ -820,7 +930,7 @@
                     return;
                 }
 
-                // Usuń oznaczenia błędów
+                // Remove error markings
                 [workMinutesInput, workSecondsInput, breakMinutesInput, breakSecondsInput].forEach(input => {
                     input.classList.remove('is-invalid');
                 });
@@ -831,8 +941,8 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        work_duration: workTime.totalSeconds / 60,      // Konwertuj na ułamek minut dla backend
-                        break_duration: breakTime.totalSeconds / 60,    // Konwertuj na ułamek minut dla backend
+                        work_duration: workTime.totalSeconds / 60,      // Convert to decimal minutes for backend
+                        break_duration: breakTime.totalSeconds / 60,    // Convert to decimal minutes for backend
                         cycles: cycles
                     })
                 })
@@ -853,7 +963,7 @@
             } catch (error) {
                 alert(error.message);
 
-                // Oznacz nieprawidłowe pola
+                // Mark invalid fields
                 [workMinutesInput, workSecondsInput, breakMinutesInput, breakSecondsInput].forEach(input => {
                     if (input.value && (parseInt(input.value) < 0 || (input.id.includes('seconds') && parseInt(input.value) > 59))) {
                         input.classList.add('is-invalid');
@@ -889,30 +999,53 @@
                 updateUI(data.timer_state);
                 clearInterval(updateInterval);
                 pauseBtn.innerHTML = '<i class="fas fa-pause me-2"></i>Pauza';
-
-                // Auto-wyłącz Focus Mode przy zatrzymaniu timera
-                if (focusModeActive) {
-                    setTimeout(() => {
-                        toggleFocusMode(false);
-                    }, 500);
-                }
             })
             .catch(error => console.error('Błąd:', error));
         });
 
         // Focus Mode Button Event Listener
         focusBtn.addEventListener('click', () => {
-            toggleFocusMode(!focusModeActive);
+            const newState = !focusModeActive;
+
+            // Apply UI changes immediately for responsiveness
+            applyFocusMode(newState);
+
+            // Sync with backend
+            fetch('/api/focus/toggle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    force_state: newState
+                })
+            }).catch(error => console.error('Błąd przełączania focus mode:', error));
         });
 
         // Escape key to exit Focus Mode
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && focusModeActive) {
-                toggleFocusMode(false);
+                applyFocusMode(false);
+
+                // Sync with backend
+                fetch('/api/focus/toggle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        force_state: false
+                    })
+                }).catch(error => console.error('Błąd wyłączania focus mode:', error));
             }
         });
 
-        // Aktualizacja podglądu przy zmianie ustawień
+        // Focus Settings Event Listeners
+        [autoEnableFocusInput, autoDisableCompletionInput, autoDisableStopInput].forEach(input => {
+            input.addEventListener('change', saveFocusSettings);
+        });
+
+        // Update preview when settings change
         [workMinutesInput, workSecondsInput, breakMinutesInput, breakSecondsInput, cyclesInput].forEach(input => {
             input.addEventListener('input', updateSessionPreview);
         });
@@ -921,11 +1054,11 @@
             updateInterval = setInterval(fetchStatus, 1000);
         }
 
-        // Inicjalizacja
+        // Initialization
         fetchStatus();
         updateSessionPreview();
 
-        // Powiadomienia przeglądarki
+        // Browser notifications
         let lastTimeLeft = -1;
         setInterval(() => {
             fetch('/api/status')
@@ -946,7 +1079,7 @@
                 });
         }, 1000);
 
-        // Prośba o pozwolenie na powiadomienia
+        // Request permission for notifications
         if ('Notification' in window && Notification.permission === 'default') {
             Notification.requestPermission();
         }

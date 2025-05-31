@@ -17,7 +17,19 @@ timer_state = {
     'break_duration': 5,
     'cycles': 1,
     'start_time': None,
-    'paused_time': 0
+    'paused_time': 0,
+    # Focus Mode state
+    'focus_mode': {
+        'active': False,
+        'auto_enable_on_start': False,
+        'auto_disable_on_completion': True,
+        'auto_disable_on_stop': True,
+        'exit_requested': False,  # Sygnał dla frontendu do wyjścia z focus mode
+        'theme': {
+            'work_color': '#28a745',
+            'break_color': '#ffc107'
+        }
+    }
 }
 
 timer_thread = None
@@ -48,6 +60,12 @@ def timer_worker():
                     print(
                         f"DEBUG: All sessions completed! Stopping timer. Final: {timer_state['current_session']}/{timer_state['total_sessions']}")
                     timer_state['is_running'] = False
+
+                    # Auto-wyłącz focus mode po zakończeniu
+                    if timer_state['focus_mode']['auto_disable_on_completion'] and timer_state['focus_mode']['active']:
+                        timer_state['focus_mode']['exit_requested'] = True
+                        print("DEBUG: Requesting focus mode exit after completion")
+
                     break
 
                 # Przełącz na pracę i nalicz cykl
@@ -67,6 +85,12 @@ def timer_worker():
                     print(
                         f"DEBUG: All sessions completed! Stopping timer. Final: {timer_state['current_session']}/{timer_state['total_sessions']}")
                     timer_state['is_running'] = False
+
+                    # Auto-wyłącz focus mode po zakończeniu
+                    if timer_state['focus_mode']['auto_disable_on_completion'] and timer_state['focus_mode']['active']:
+                        timer_state['focus_mode']['exit_requested'] = True
+                        print("DEBUG: Requesting focus mode exit after completion")
+
                     break
 
                 # Przełącz na przerwę
@@ -127,6 +151,14 @@ def start_timer():
             'paused_time': 0
         })
 
+        # Auto-włącz focus mode jeśli ustawione
+        if timer_state['focus_mode']['auto_enable_on_start']:
+            timer_state['focus_mode']['active'] = True
+            print("DEBUG: Auto-enabled focus mode on timer start")
+
+        # Reset flag wyjścia z focus mode
+        timer_state['focus_mode']['exit_requested'] = False
+
         # Uruchom timer w osobnym wątku
         stop_timer.clear()
         timer_thread = threading.Thread(target=timer_worker)
@@ -148,6 +180,9 @@ def pause_timer():
         return jsonify({'status': 'paused', 'timer_state': timer_state})
     else:
         timer_state['is_running'] = True
+        # Reset flag wyjścia z focus mode przy wznowieniu
+        timer_state['focus_mode']['exit_requested'] = False
+
         # Wznów timer w nowym wątku
         global timer_thread, stop_timer
         stop_timer.clear()
@@ -162,6 +197,12 @@ def stop_timer_endpoint():
     global timer_state, stop_timer
 
     stop_timer.set()
+
+    # Auto-wyłącz focus mode przy zatrzymaniu jeśli ustawione
+    if timer_state['focus_mode']['auto_disable_on_stop'] and timer_state['focus_mode']['active']:
+        timer_state['focus_mode']['exit_requested'] = True
+        print("DEBUG: Requesting focus mode exit after stop")
+
     timer_state.update({
         'is_running': False,
         'current_session': 0,
@@ -173,6 +214,74 @@ def stop_timer_endpoint():
     })
 
     return jsonify({'status': 'stopped', 'timer_state': timer_state})
+
+
+@app.route('/api/focus/toggle', methods=['POST'])
+def toggle_focus_mode():
+    """Przełącza stan focus mode"""
+    data = request.json or {}
+    force_state = data.get('force_state')  # None, True, False
+
+    if force_state is not None:
+        timer_state['focus_mode']['active'] = bool(force_state)
+    else:
+        timer_state['focus_mode']['active'] = not timer_state['focus_mode']['active']
+
+    # Reset flag wyjścia przy ręcznym przełączeniu
+    timer_state['focus_mode']['exit_requested'] = False
+
+    print(f"DEBUG: Focus mode toggled to: {timer_state['focus_mode']['active']}")
+
+    return jsonify({
+        'status': 'focus_toggled',
+        'focus_mode': timer_state['focus_mode']
+    })
+
+
+@app.route('/api/focus/settings', methods=['POST'])
+def update_focus_settings():
+    """Aktualizuje ustawienia focus mode"""
+    data = request.json or {}
+
+    focus_settings = timer_state['focus_mode']
+
+    # Aktualizuj ustawienia jeśli podane
+    if 'auto_enable_on_start' in data:
+        focus_settings['auto_enable_on_start'] = bool(data['auto_enable_on_start'])
+
+    if 'auto_disable_on_completion' in data:
+        focus_settings['auto_disable_on_completion'] = bool(data['auto_disable_on_completion'])
+
+    if 'auto_disable_on_stop' in data:
+        focus_settings['auto_disable_on_stop'] = bool(data['auto_disable_on_stop'])
+
+    if 'theme' in data:
+        theme_data = data['theme']
+        if 'work_color' in theme_data:
+            focus_settings['theme']['work_color'] = theme_data['work_color']
+        if 'break_color' in theme_data:
+            focus_settings['theme']['break_color'] = theme_data['break_color']
+
+    print(f"DEBUG: Focus settings updated: {focus_settings}")
+
+    return jsonify({
+        'status': 'settings_updated',
+        'focus_mode': focus_settings
+    })
+
+
+@app.route('/api/focus/acknowledge-exit', methods=['POST'])
+def acknowledge_focus_exit():
+    """Frontend potwierdza wyjście z focus mode"""
+    timer_state['focus_mode']['exit_requested'] = False
+    timer_state['focus_mode']['active'] = False
+
+    print("DEBUG: Focus mode exit acknowledged by frontend")
+
+    return jsonify({
+        'status': 'exit_acknowledged',
+        'focus_mode': timer_state['focus_mode']
+    })
 
 
 @app.route('/api/status')
