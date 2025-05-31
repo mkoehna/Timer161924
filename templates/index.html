@@ -822,12 +822,31 @@
         function updateUI(state) {
             timerDisplay.textContent = formatTime(state.time_left);
 
-            // Display sessions: current session (1-indexed) and total
-            currentSessionSpan.textContent = state.current_session + 1;
+            // Display sessions: backend current_session is 0-indexed during execution
+            // We need to show the session that's currently running or just completed
+            let displaySession;
+            if (!state.is_running && state.time_left === 0) {
+                // Timer finished - show the actual completed sessions, capped at total
+                displaySession = Math.min(state.current_session, state.total_sessions);
+            } else {
+                // Timer running or paused - show current session (1-indexed)
+                displaySession = state.current_session + 1;
+            }
+
+            currentSessionSpan.textContent = displaySession;
             totalSessionsSpan.textContent = state.total_sessions;
 
-            // Display cycles: current cycle (1-indexed) and total
-            currentCycleSpan.textContent = state.current_cycle + 1;
+            // Display cycles: similar logic for cycles
+            let displayCycle;
+            if (!state.is_running && state.time_left === 0 && state.current_session >= state.total_sessions) {
+                // Timer finished - show completed cycles
+                displayCycle = state.cycles;
+            } else {
+                // Timer running or paused - show current cycle (1-indexed)
+                displayCycle = Math.min(state.current_cycle + 1, state.cycles);
+            }
+
+            currentCycleSpan.textContent = displayCycle;
             totalCyclesSpan.textContent = state.cycles;
 
             // Handle focus mode backend changes
