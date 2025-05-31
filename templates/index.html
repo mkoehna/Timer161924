@@ -402,100 +402,126 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Ustawienia timera -->
-                <div class="settings-form">
-                    <h3 class="mb-4">
-                        <i class="fas fa-cog text-secondary me-2"></i>
-                        Ustawienia timera
-                    </h3>
-                    <form id="timer-form">
-                        <div class="row">
-                            <!-- Czas pracy -->
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-briefcase text-success me-2"></i>
-                                    Czas pracy
-                                </label>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <input type="number" class="form-control" id="work-minutes" value="25" min="0" max="120">
-                                        <small class="form-text text-muted">Minuty</small>
-                                    </div>
-                                    <div class="col-6">
-                                        <input type="number" class="form-control" id="work-seconds" value="0" min="0" max="59">
-                                        <small class="form-text text-muted">Sekundy</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Czas przerwy -->
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-coffee text-warning me-2"></i>
-                                    Czas przerwy
-                                </label>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <input type="number" class="form-control" id="break-minutes" value="5" min="0" max="60">
-                                        <small class="form-text text-muted">Minuty</small>
-                                    </div>
-                                    <div class="col-6">
-                                        <input type="number" class="form-control" id="break-seconds" value="0" min="0" max="59">
-                                        <small class="form-text text-muted">Sekundy</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Liczba cykli -->
-                            <div class="col-md-4 mb-3">
-                                <label for="cycles" class="form-label">
-                                    <i class="fas fa-redo text-info me-2"></i>
-                                    Liczba cykli
-                                </label>
-                                <input type="number" class="form-control" id="cycles" value="4" min="1" max="20">
-                                <small class="form-text text-muted">Ile rund pracy</small>
-                            </div>
-                        </div>
-
-                        <!-- Focus Mode Settings -->
-                        <div class="focus-settings">
-                            <h6><i class="fas fa-eye me-2"></i>Ustawienia Focus Mode</h6>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="auto-enable-focus">
-                                        <label class="form-check-label" for="auto-enable-focus">
-                                            Auto-włącz przy starcie
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="auto-disable-completion" checked>
-                                        <label class="form-check-label" for="auto-disable-completion">
-                                            Auto-wyłącz po zakończeniu
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="auto-disable-stop" checked>
-                                        <label class="form-check-label" for="auto-disable-stop">
-                                            Auto-wyłącz przy zatrzymaniu
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Podgląd ustawień -->
-                        <div class="mt-4 p-3 bg-light rounded">
-                            <h5><i class="fas fa-eye text-primary me-2"></i>Podgląd sesji:</h5>
-                            <div id="session-preview" class="text-muted">
-                                4 cykle × (25min pracy + 5min przerwy) = <strong>2h</strong>
-                            </div>
-                        </div>
-                    </form>
+<div class="settings-form">
+    <h3 class="mb-4">
+        <i class="fas fa-cog text-secondary me-2"></i>
+        Ustawienia timera
+    </h3>
+    <form id="timer-form">
+        <div class="row">
+            <!-- Czas pracy -->
+            <div class="col-md-4 mb-3">
+                <label class="form-label">
+                    <i class="fas fa-briefcase text-success me-2"></i>
+                    Czas pracy
+                </label>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="number" class="form-control" id="work-minutes" value="25" min="0" max="120">
+                        <small class="form-text text-muted">Minuty</small>
+                    </div>
+                    <div class="col-6">
+                        <input type="number" class="form-control" id="work-seconds" value="0" min="0" max="59">
+                        <small class="form-text text-muted">Sekundy</small>
+                    </div>
                 </div>
+            </div>
+            <!-- Czas przerwy -->
+            <div class="col-md-4 mb-3">
+                <label class="form-label">
+                    <i class="fas fa-coffee text-warning me-2"></i>
+                    Czas przerwy
+                </label>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="number" class="form-control" id="break-minutes" value="5" min="0" max="60">
+                        <small class="form-text text-muted">Minuty</small>
+                    </div>
+                    <div class="col-6">
+                        <input type="number" class="form-control" id="break-seconds" value="0" min="0" max="59">
+                        <small class="form-text text-muted">Sekundy</small>
+                    </div>
+                </div>
+            </div>
+            <!-- Liczba cykli -->
+            <div class="col-md-4 mb-3">
+                <label for="cycles" class="form-label">
+                    <i class="fas fa-redo text-info me-2"></i>
+                    Liczba cykli
+                </label>
+                <input type="number" class="form-control" id="cycles" value="4" min="1" max="20">
+                <small class="form-text text-muted">Ile rund pracy</small>
+            </div>
+        </div>
+
+        <!-- Nowe opcje: Zakończenie przerwą i Rozgrzewka -->
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="end-with-break" checked>
+                    <label class="form-check-label" for="end-with-break">
+                        <i class="fas fa-coffee text-warning me-2"></i>
+                        Zakończ sesję przerwą
+                    </label>
+                    <small class="form-text text-muted d-block">Jeśli odznaczone, sesja kończy się pracą</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="warmup-enabled">
+                    <label class="form-check-label" for="warmup-enabled">
+                        <i class="fas fa-fire text-danger me-2"></i>
+                        Rozgrzewka 10s
+                    </label>
+                    <small class="form-text text-muted d-block">Dodaj 10s rozgrzewki przed pierwszą sesją</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Focus Mode Settings -->
+        <div class="focus-settings">
+            <h6><i class="fas fa-eye me-2"></i>Ustawienia Focus Mode</h6>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="auto-enable-focus">
+                        <label class="form-check-label" for="auto-enable-focus">
+                            Auto-włącz przy starcie
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="auto-disable-completion" checked>
+                        <label class="form-check-label" for="auto-disable-completion">
+                            Auto-wyłącz po zakończeniu
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="auto-disable-stop" checked>
+                        <label class="form-check-label" for="auto-disable-stop">
+                            Auto-wyłącz przy zatrzymaniu
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Podgląd ustawień -->
+        <div class="mt-4 p-3 bg-light rounded">
+            <h5><i class="fas fa-eye text-primary me-2"></i>Podgląd sesji:</h5>
+            <div id="session-preview" class="text-muted">
+                4 cykle × (25min pracy + 5min przerwy) = <strong>2h</strong>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
             </div>
         </div>
     </div>
@@ -508,6 +534,8 @@
         let isRunning = false;
         let focusModeActive = false;
         let lastFocusState = null;
+        // Dodajmy zmienną do śledzenia, czy użytkownik zmienił ustawienia
+        let userChangedSettings = false;
 
         // Elementy DOM
         const timerDisplay = document.getElementById('timer-display');
@@ -528,6 +556,10 @@
         const breakMinutesInput = document.getElementById('break-minutes');
         const breakSecondsInput = document.getElementById('break-seconds');
         const cyclesInput = document.getElementById('cycles');
+
+        // Nowe elementy formularza
+        const endWithBreakInput = document.getElementById('end-with-break');
+        const warmupEnabledInput = document.getElementById('warmup-enabled');
 
         // Focus Mode Settings
         const autoEnableFocusInput = document.getElementById('auto-enable-focus');
@@ -573,14 +605,37 @@
             }
         }
 
+        // Funkcja do aktualizacji ustawień timera
+        function updateTimerSettings() {
+            userChangedSettings = true;
+
+            fetch('/api/update-settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    end_with_break: endWithBreakInput.checked,
+                    warmup_enabled: warmupEnabledInput.checked
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Ustawienia zaktualizowane:', data);
+            })
+            .catch(error => console.error('Błąd aktualizacji ustawień:', error));
+        }
+
         // Focus Mode Functions
         function applyFocusMode(enable, isBreak = false) {
             if (enable) {
                 document.body.classList.add('zen-focus-mode');
                 if (isBreak) {
                     document.body.classList.add('break-phase');
+                    document.body.style.background = '';  // Reset do domyślnego gradientu dla przerwy
                 } else {
                     document.body.classList.remove('break-phase');
+                    document.body.style.background = '';  // Reset do domyślnego gradientu dla pracy
                 }
                 focusModeActive = true;
 
@@ -598,6 +653,7 @@
             } else {
                 document.body.classList.remove('zen-focus-mode');
                 document.body.classList.remove('break-phase');
+                document.body.style.background = '';  // Reset do domyślnego gradientu
                 focusModeActive = false;
 
                 // Update button text and icon back
@@ -755,8 +811,29 @@
                 const workTime = parseTimeInputs(workMinutesInput, workSecondsInput);
                 const breakTime = parseTimeInputs(breakMinutesInput, breakSecondsInput);
                 const cycles = parseInt(cyclesInput.value) || 4;
+                const endWithBreak = endWithBreakInput.checked;
+                const warmupEnabled = warmupEnabledInput.checked;
 
-                const totalSeconds = cycles * (workTime.totalSeconds + breakTime.totalSeconds);
+                // Obliczanie liczby sesji
+                let totalSessions = cycles * 2;
+                if (!endWithBreak) {
+                    totalSessions -= 1;  // Odejmujemy ostatnią przerwę jeśli nie kończymy przerwą
+                }
+
+                let totalSeconds = 0;
+
+                // Dodajemy czas rozgrzewki jeśli włączona
+                if (warmupEnabled) {
+                    totalSeconds += 10;
+                }
+
+                // Dodajemy czas pracy i przerw
+                if (endWithBreak) {
+                    totalSeconds += cycles * (workTime.totalSeconds + breakTime.totalSeconds);
+                } else {
+                    totalSeconds += (cycles * workTime.totalSeconds) + ((cycles - 1) * breakTime.totalSeconds);
+                }
+
                 const hours = Math.floor(totalSeconds / 3600);
                 const minutes = Math.floor((totalSeconds % 3600) / 60);
                 const seconds = totalSeconds % 60;
@@ -779,9 +856,22 @@
                     timeString = `${seconds}s`;
                 }
 
-                sessionPreview.innerHTML = `
-                    ${cycles} cykli × (${workTime.formatted} pracy + ${breakTime.formatted} przerwy) = <strong>${timeString}</strong>
-                `;
+                // Zaktualizowany podgląd sesji z informacją o rozgrzewce
+                let previewText = `${cycles} cykli × (${workTime.formatted} pracy`;
+
+                if (endWithBreak) {
+                    previewText += ` + ${breakTime.formatted} przerwy)`;
+                } else {
+                    previewText += `) + ${cycles-1} × (${breakTime.formatted} przerwy)`;
+                }
+
+                if (warmupEnabled) {
+                    previewText += ` + 10s rozgrzewki`;
+                }
+
+                previewText += ` = <strong>${timeString}</strong>`;
+
+                sessionPreview.innerHTML = previewText;
 
                 // Remove errors if any
                 [workMinutesInput, workSecondsInput, breakMinutesInput, breakSecondsInput].forEach(input => {
@@ -828,6 +918,9 @@
             if (!state.is_running && state.time_left === 0) {
                 // Timer finished - show the actual completed sessions, capped at total
                 displaySession = Math.min(state.current_session, state.total_sessions);
+            } else if (state.in_warmup) {
+                // Podczas rozgrzewki pokazujemy 0 sesji
+                displaySession = 0;
             } else {
                 // Timer running or paused - show current session (1-indexed)
                 displaySession = state.current_session + 1;
@@ -841,6 +934,9 @@
             if (!state.is_running && state.time_left === 0 && state.current_session >= state.total_sessions) {
                 // Timer finished - show completed cycles
                 displayCycle = state.cycles;
+            } else if (state.in_warmup) {
+                // Podczas rozgrzewki pokazujemy 0 cykli
+                displayCycle = 0;
             } else {
                 // Timer running or paused - show current cycle (1-indexed)
                 displayCycle = Math.min(state.current_cycle + 1, state.cycles);
@@ -857,13 +953,24 @@
 
             // Change circle and timer color depending on phase
             if (state.is_running) {
-                if (state.is_break) {
+                if (state.in_warmup) {
+                    // Styl dla rozgrzewki
+                    progressCircle.style.stroke = '#adb5bd';  // Szary dla rozgrzewki
+                    timerDisplay.style.color = focusModeActive ? '#ffffff' : '#adb5bd';
+
+                    // W Zen Mode zmień tło na szare (rozgrzewka)
+                    if (focusModeActive) {
+                        document.body.classList.remove('break-phase');
+                        document.body.style.background = 'linear-gradient(135deg, #adb5bd 0%, #dee2e6 100%)';
+                    }
+                } else if (state.is_break) {
                     progressCircle.style.stroke = '#ffc107';  // Yellow for break
                     timerDisplay.style.color = focusModeActive ? '#ffffff' : '#ffc107';
 
                     // In Zen Mode change background to yellow (break)
                     if (focusModeActive) {
                         document.body.classList.add('break-phase');
+                        document.body.style.background = '';  // Reset do domyślnego gradientu dla przerwy
                     }
                 } else {
                     progressCircle.style.stroke = '#28a745';  // Green for work
@@ -872,6 +979,7 @@
                     // In Zen Mode background green (work)
                     if (focusModeActive) {
                         document.body.classList.remove('break-phase');
+                        document.body.style.background = '';  // Reset do domyślnego gradientu dla pracy
                     }
                 }
             } else {
@@ -881,6 +989,7 @@
                 // Reset background to default (green) when not running
                 if (focusModeActive) {
                     document.body.classList.remove('break-phase');
+                    document.body.style.background = '';  // Reset do domyślnego gradientu
                 }
             }
 
@@ -890,8 +999,31 @@
             stopBtn.disabled = !state.is_running && state.time_left === 0;
 
             // Update progress bar
-            const currentTotalTime = state.is_break ? Math.round(state.break_duration * 60) : Math.round(state.work_duration * 60);
+            let currentTotalTime;
+            if (state.in_warmup) {
+                currentTotalTime = 10; // Czas rozgrzewki (10 sekund)
+            } else {
+                currentTotalTime = state.is_break ?
+                    Math.round(state.break_duration * 60) :
+                    Math.round(state.work_duration * 60);
+            }
             updateProgress(state.time_left, currentTotalTime);
+
+            // Zaktualizuj stan checkboxów na podstawie stanu backend TYLKO jeśli użytkownik nie wprowadził zmian
+            // lub jeśli timer jest uruchomiony (wtedy backend ma zawsze rację)
+            if (state.is_running || !userChangedSettings) {
+                if (state.end_with_break !== undefined) {
+                    endWithBreakInput.checked = state.end_with_break;
+                }
+                if (state.warmup_enabled !== undefined) {
+                    warmupEnabledInput.checked = state.warmup_enabled;
+                }
+            }
+
+            // Jeśli timer się zatrzymał, pozwól użytkownikowi na wprowadzanie zmian
+            if (!state.is_running) {
+                startBtn.disabled = false;
+            }
         }
 
         function saveFocusSettings() {
@@ -919,9 +1051,18 @@
 
                     // Update focus settings UI from backend
                     if (data.focus_mode) {
-                        autoEnableFocusInput.checked = data.focus_mode.auto_enable_on_start;
-                        autoDisableCompletionInput.checked = data.focus_mode.auto_disable_on_completion;
-                        autoDisableStopInput.checked = data.focus_mode.auto_disable_on_stop;
+                        // Aktualizuj focus settings tylko jeśli timer jest uruchomiony
+                        if (data.is_running) {
+                            autoEnableFocusInput.checked = data.focus_mode.auto_enable_on_start;
+                            autoDisableCompletionInput.checked = data.focus_mode.auto_disable_on_completion;
+                            autoDisableStopInput.checked = data.focus_mode.auto_disable_on_stop;
+                        }
+                    }
+
+                    // Jeśli timer nie działa, zmniejsz częstotliwość odświeżania do 3 sekund
+                    if (!data.is_running && updateInterval) {
+                        clearInterval(updateInterval);
+                        updateInterval = setInterval(fetchStatus, 3000); // Co 3 sekundy gdy timer nie działa
                     }
                 })
                 .catch(error => console.error('Błąd:', error));
@@ -933,6 +1074,8 @@
                 const workTime = parseTimeInputs(workMinutesInput, workSecondsInput);
                 const breakTime = parseTimeInputs(breakMinutesInput, breakSecondsInput);
                 const cycles = parseInt(cyclesInput.value);
+                const endWithBreak = endWithBreakInput.checked;
+                const warmupEnabled = warmupEnabledInput.checked;
 
                 // Validation
                 if (cycles < 1 || cycles > 20) {
@@ -962,7 +1105,9 @@
                     body: JSON.stringify({
                         work_duration: workTime.totalSeconds / 60,      // Convert to decimal minutes for backend
                         break_duration: breakTime.totalSeconds / 60,    // Convert to decimal minutes for backend
-                        cycles: cycles
+                        cycles: cycles,
+                        end_with_break: endWithBreak,
+                        warmup_enabled: warmupEnabled
                     })
                 })
                 .then(response => response.json())
@@ -972,6 +1117,8 @@
                     } else {
                         updateUI(data.timer_state);
                         startUpdateInterval();
+                        // Reset flagi zmian użytkownika, gdy timer startuje
+                        userChangedSettings = false;
                     }
                 })
                 .catch(error => {
@@ -1008,7 +1155,6 @@
             })
             .catch(error => console.error('Błąd:', error));
         });
-
         stopBtn.addEventListener('click', () => {
             fetch('/api/stop', {
                 method: 'POST',
@@ -1018,6 +1164,8 @@
                 updateUI(data.timer_state);
                 clearInterval(updateInterval);
                 pauseBtn.innerHTML = '<i class="fas fa-pause me-2"></i>Pauza';
+                // Po zatrzymaniu timera ustawiamy mniejszy interwał odświeżania
+                updateInterval = setInterval(fetchStatus, 3000);
             })
             .catch(error => console.error('Błąd:', error));
         });
@@ -1064,13 +1212,32 @@
             input.addEventListener('change', saveFocusSettings);
         });
 
+        // Dodajmy obsługę zdarzeń dla checkboxów
+        endWithBreakInput.addEventListener('change', function() {
+            updateTimerSettings();
+            updateSessionPreview();
+        });
+
+        warmupEnabledInput.addEventListener('change', function() {
+            updateTimerSettings();
+            updateSessionPreview();
+        });
+
         // Update preview when settings change
         [workMinutesInput, workSecondsInput, breakMinutesInput, breakSecondsInput, cyclesInput].forEach(input => {
             input.addEventListener('input', updateSessionPreview);
+            input.addEventListener('change', updateSessionPreview);
         });
 
         function startUpdateInterval() {
+            // Wyczyść istniejący interwał, jeśli istnieje
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+            // Gdy timer działa, aktualizuj co 1 sekundę
             updateInterval = setInterval(fetchStatus, 1000);
+            // Reset flagi zmian użytkownika, gdy timer startuje
+            userChangedSettings = false;
         }
 
         // Initialization
@@ -1085,13 +1252,22 @@
                 .then(data => {
                     if (lastTimeLeft > 0 && data.time_left === 0 && data.is_running) {
                         if (Notification.permission === 'granted') {
-                            new Notification(
-                                data.is_break ? 'Czas na przerwę!' : 'Czas na pracę!',
-                                {
-                                    icon: '/static/favicon.ico',
-                                    body: data.is_break ? 'Zrób sobie przerwę ☕' : 'Wracamy do pracy! 💪'
-                                }
-                            );
+                            let title, body;
+                            if (data.in_warmup) {
+                                title = 'Koniec rozgrzewki!';
+                                body = 'Czas zacząć pracę 💪';
+                            } else if (data.is_break) {
+                                title = 'Czas na przerwę!';
+                                body = 'Zrób sobie przerwę ☕';
+                            } else {
+                                title = 'Czas na pracę!';
+                                body = 'Wracamy do pracy! 💪';
+                            }
+
+                            new Notification(title, {
+                                icon: '/static/favicon.ico',
+                                body: body
+                            });
                         }
                     }
                     lastTimeLeft = data.time_left;

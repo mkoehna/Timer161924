@@ -18,6 +18,10 @@ timer_state = {
     'cycles': 1,
     'start_time': None,
     'paused_time': 0,
+    'end_with_break': True,  # Nowe pole - czy kończymy przerwą
+    'warmup_enabled': False,  # Nowe pole - czy włączyć rozgrzewkę
+    'in_warmup': False,  # Nowe pole - czy aktualnie jest rozgrzewka
+    'warmup_duration': 10,  # Czas rozgrzewki w sekundach
     # Focus Mode state
     'focus_mode': {
         'active': False,
@@ -27,7 +31,8 @@ timer_state = {
         'exit_requested': False,  # Sygnał dla frontendu do wyjścia z focus mode
         'theme': {
             'work_color': '#28a745',
-            'break_color': '#ffc107'
+            'break_color': '#ffc107',
+            'warmup_color': '#adb5bd'  # Dodajemy kolor dla rozgrzewki
         }
     }
 }
@@ -47,7 +52,14 @@ def timer_worker():
         else:
             # Czas się skończył
             print(
-                f"DEBUG: Time finished. Current session: {timer_state['current_session']}, is_break: {timer_state['is_break']}")
+                f"DEBUG: Time finished. Current session: {timer_state['current_session']}, is_break: {timer_state['is_break']}, in_warmup: {timer_state['in_warmup']}")
+
+            # Jeśli była rozgrzewka, przełącz na pierwszy timer pracy
+            if timer_state['in_warmup']:
+                timer_state['in_warmup'] = False
+                timer_state['time_left'] = round(timer_state['work_duration'] * 60)
+                print(f"DEBUG: Warmup ended. Switching to first work session.")
+                continue
 
             if timer_state['is_break']:
                 # Koniec przerwy
@@ -121,13 +133,15 @@ def start_timer():
         work_duration_decimal = float(data.get('work_duration', 25))
         break_duration_decimal = float(data.get('break_duration', 5))
         cycles = int(data.get('cycles', 1))
+        end_with_break = bool(data.get('end_with_break', True))
+        warmup_enabled = bool(data.get('warmup_enabled', False))
 
         # Walidacja zakresów (w minutach)
-        if work_duration_decimal < 0.017 or work_duration_decimal > 120:  # min 1 sekunda
-            return jsonify({'error': 'Czas pracy musi być między 0.017 a 120 minutami'}), 400
+        if work_duration_decimal < 0.016 or work_duration_decimal > 120:  # min 1 sekunda
+            return jsonify({'error': 'Czas pracy musi być między 0.016 a 120 minutami'}), 400
 
-        if break_duration_decimal < 0.017 or break_duration_decimal > 60:  # min 1 sekunda
-            return jsonify({'error': 'Czas przerwy musi być między 0.017 a 60 minutami'}), 400
+        if break_duration_decimal < 0.016 or break_duration_decimal > 60:  # min 1 sekunda
+            return jsonify({'error': 'Czas przerwy musi być między 0.016 a 60 minutami'}), 400
 
         if cycles < 1 or cycles > 20:
             return jsonify({'error': 'Liczba cykli musi być między 1 a 20'}), 400
@@ -135,6 +149,11 @@ def start_timer():
         # Konwersja na sekundy (zaokrąglone do pełnych sekund)
         work_duration_seconds = round(work_duration_decimal * 60)
         break_duration_seconds = round(break_duration_decimal * 60)
+
+        # Obliczenie całkowitej liczby sesji
+        total_sessions = cycles * 2
+        if not end_with_break:
+            total_sessions -= 1  # Odejmujemy ostatnią przerwę jeśli nie kończymy przerwą
 
         # Ustawienia timera
         timer_state.update({
@@ -145,8 +164,12 @@ def start_timer():
             'current_session': 0,
             'current_cycle': 0,
             'is_break': False,
-            'time_left': work_duration_seconds,  # Sekundy dla odliczania
-            'total_sessions': cycles * 2,  # Każdy cykl = 2 sesje (praca + przerwa)
+            'end_with_break': end_with_break,
+            'warmup_enabled': warmup_enabled,
+            'in_warmup': warmup_enabled,  # Zaczynamy od rozgrzewki jeśli włączona
+            'time_left': 10 if warmup_enabled else work_duration_seconds,
+            # Jeśli rozgrzewka to 10s, inaczej normalny czas pracy
+            'total_sessions': total_sessions,
             'start_time': datetime.now(),
             'paused_time': 0
         })
@@ -209,11 +232,36 @@ def stop_timer_endpoint():
         'current_cycle': 0,
         'time_left': 0,
         'is_break': False,
+        'in_warmup': False,  # Reset stanu rozgrzewki
         'start_time': None,
         'paused_time': 0
+        # Nie resetujemy end_with_break i warmup_enabled, żeby zachować ustawienia użytkownika
     })
 
     return jsonify({'status': 'stopped', 'timer_state': timer_state})
+
+
+@app.route('/api/update-settings', methods=['POST'])
+def update_timer_settings():
+    """Aktualizuje ustawienia timera bez jego uruchamiania"""
+    global timer_state
+
+    data = request.json or {}
+
+    # Aktualizuj tylko te ustawienia, które zostały przekazane
+    if 'end_with_break' in data:
+        timer_state['end_with_break'] = bool(data['end_with_break'])
+
+    if 'warmup_enabled' in data:
+        timer_state['warmup_enabled'] = bool(data['warmup_enabled'])
+
+    print(
+        f"DEBUG: Timer settings updated: end_with_break={timer_state['end_with_break']}, warmup_enabled={timer_state['warmup_enabled']}")
+
+    return jsonify({
+        'status': 'settings_updated',
+        'timer_state': timer_state
+    })
 
 
 @app.route('/api/focus/toggle', methods=['POST'])
@@ -261,6 +309,8 @@ def update_focus_settings():
             focus_settings['theme']['work_color'] = theme_data['work_color']
         if 'break_color' in theme_data:
             focus_settings['theme']['break_color'] = theme_data['break_color']
+        if 'warmup_color' in theme_data:
+            focus_settings['theme']['warmup_color'] = theme_data['warmup_color']
 
     print(f"DEBUG: Focus settings updated: {focus_settings}")
 
