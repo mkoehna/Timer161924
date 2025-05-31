@@ -32,7 +32,7 @@
         .info-card {
             background: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
-            padding: 15px;
+            padding: 10px 15px;  /* Zmniejszone z 15px na 10px (góra/dół) */
             margin: 5px;
             border: 2px solid #e9ecef;
             transition: all 0.3s ease;
@@ -66,6 +66,8 @@
             letter-spacing: 1px;
             transition: all 0.3s ease;
             margin: 0.5rem;
+            min-width: 120px;  /* Stała minimalna szerokość dla wszystkich */
+            text-align: center;
         }
 
         .btn-timer:hover {
@@ -106,7 +108,7 @@
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
             padding: 2rem;
-            margin-top: 2rem;
+            margin-top: 1rem;
         }
 
         .progress-ring {
@@ -138,24 +140,193 @@
             border-color: #dc3545;
             box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
         }
+
+        /* Focus Mode Toggle Styling */
+        .focus-toggle-wrapper {
+            vertical-align: middle;
+        }
+
+        .focus-toggle {
+            transform: scale(1.2);
+        }
+
+        .focus-toggle:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+
+        .focus-label {
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .focus-label:hover {
+            color: #667eea;
+        }
+
+        /* ZEN FOCUS MODE STYLES */
+        .zen-focus-mode {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            transition: background 0.5s ease-in-out, all 0.5s ease-in-out;
+        }
+
+        .zen-focus-mode.break-phase {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+        }
+
+        .zen-focus-mode .container {
+            padding: 0 !important;
+            max-width: none !important;
+        }
+
+        .zen-focus-mode .col-lg-8 {
+            max-width: none !important;
+            flex: none !important;
+            width: 100% !important;
+        }
+
+        .zen-focus-mode .timer-card {
+            margin: 0 !important;
+            height: 100vh !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            backdrop-filter: none !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+
+        .zen-focus-mode .card-body {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            height: 100vh !important;
+            padding: 2rem !important;
+        }
+
+        .zen-focus-mode .settings-form {
+            display: none !important;
+        }
+
+        /* Zen Mode - Timer zajmuje 60% wysokości ekranu */
+        .zen-focus-mode .timer-display {
+            font-size: calc(60vh / 4) !important;
+            color: #ffffff !important;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3) !important;
+            margin: 0 !important;
+            font-weight: 300 !important;
+            line-height: 0.8 !important;
+            height: 60vh !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        /* Zen Mode - SVG Timer Circle */
+        .zen-focus-mode .position-relative {
+            height: 60vh !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .zen-focus-mode svg {
+            width: calc(60vh * 0.8) !important;
+            height: calc(60vh * 0.8) !important;
+        }
+
+        .zen-focus-mode svg circle {
+            stroke-width: 12 !important;
+            r: calc((60vh * 0.8 - 24) / 2) !important;
+            cx: calc(60vh * 0.4) !important;
+            cy: calc(60vh * 0.4) !important;
+        }
+
+        /* Zen Mode - Subtle Info Cards */
+        .zen-focus-mode .info-card {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            backdrop-filter: blur(10px) !important;
+            margin: 0 1rem !important;
+        }
+
+        .zen-focus-mode .info-label {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-size: 0.8rem !important;
+        }
+
+        .zen-focus-mode .info-value {
+            color: #ffffff !important;
+            font-size: 1.6rem !important;
+            font-weight: 600 !important;
+        }
+
+        /* Zen Mode - Floating Buttons */
+        .zen-focus-mode .btn-timer {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            color: #ffffff !important;
+            backdrop-filter: blur(10px) !important;
+            margin: 0.3rem !important;
+            transition: all 0.3s ease !important;
+            font-weight: 600 !important;
+        }
+
+        .zen-focus-mode .btn-timer:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+            border-color: rgba(255, 255, 255, 0.6) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .zen-focus-mode .btn-timer:disabled {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        /* Zen Mode - Progress Circle */
+        .zen-focus-mode .progress-circle {
+            stroke: #ffffff !important;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4)) !important;
+        }
+
+        .zen-focus-mode svg circle:first-child {
+            stroke: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        /* Zen Mode - Focus Toggle */
+        .zen-focus-mode .btn-info.btn-timer {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            color: #ffffff !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        /* Zen Mode - Minimized Session Info */
+        .zen-focus-mode .row.mb-5 {
+            margin-bottom: 1rem !important;
+        }
+
+        /* Smooth transitions */
+        .container, .timer-card, .card-body, .timer-display, .info-card, .btn-timer {
+            transition: all 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body>
-    <div class="container py-5">
+    <div class="container py-2">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <!-- Główny timer -->
-                <div class="card timer-card mb-4">
+                <div class="card timer-card mb-2">
                     <div class="card-body text-center p-5">
 
-                        <!-- Status, Sesja i Cykl na górze -->
-                        <div class="row mb-4">
-                            <div class="col-md-4">
-                                <div id="status-badge" class="status-badge stopped-status w-100">
-                                    <i class="fas fa-stop me-2"></i>Zatrzymany
-                                </div>
-                            </div>
-                            <div class="col-md-4">
+                        <!-- Sesja i Cykl na górze -->
+                        <div class="row mb-5">
+                            <div class="col-md-6">
                                 <div class="info-card">
                                     <div class="info-label">Sesja</div>
                                     <div class="info-value">
@@ -163,7 +334,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="info-card">
                                     <div class="info-label">Cykl</div>
                                     <div class="info-value">
@@ -175,24 +346,24 @@
 
                         <!-- Wyświetlacz czasu z kołem postępu -->
                         <div class="position-relative d-inline-block mb-4">
-                            <svg width="300" height="300" class="position-absolute top-50 start-50 translate-middle">
-                                <circle cx="150" cy="150" r="120" fill="none" stroke="#e9ecef" stroke-width="8"/>
+                            <svg width="290" height="290" class="position-absolute top-50 start-50 translate-middle">
+                                <circle cx="145" cy="145" r="115" fill="none" stroke="#e9ecef" stroke-width="8"/>
                                 <circle
                                     id="progress-circle"
-                                    cx="150" cy="150" r="120"
+                                    cx="145" cy="145" r="115"
                                     fill="none"
                                     stroke="#667eea"
                                     stroke-width="8"
                                     stroke-linecap="round"
-                                    stroke-dasharray="754"
-                                    stroke-dashoffset="754"
+                                    stroke-dasharray="723"
+                                    stroke-dashoffset="723"
                                     class="progress-circle progress-ring"
                                 />
                             </svg>
                             <div id="timer-display" class="timer-display">00:00</div>
                         </div>
 
-                        <!-- Przyciski sterowania -->
+                        <!-- Przyciski sterowania i Focus button -->
                         <div class="mt-4">
                             <button id="start-btn" class="btn btn-success btn-timer">
                                 <i class="fas fa-play me-2"></i>Start
@@ -202,6 +373,11 @@
                             </button>
                             <button id="stop-btn" class="btn btn-danger btn-timer" disabled>
                                 <i class="fas fa-stop me-2"></i>Stop
+                            </button>
+
+                            <!-- Focus Mode Button -->
+                            <button id="focus-btn" class="btn btn-info btn-timer">
+                                <i class="fas fa-expand me-2"></i>Focus
                             </button>
                         </div>
                     </div>
@@ -215,24 +391,41 @@
                     </h3>
                     <form id="timer-form">
                         <div class="row">
+                            <!-- Czas pracy -->
                             <div class="col-md-4 mb-3">
-                                <label for="work-duration" class="form-label">
+                                <label class="form-label">
                                     <i class="fas fa-briefcase text-success me-2"></i>
-                                    Czas pracy (minuty)
+                                    Czas pracy
                                 </label>
-                                <input type="text" class="form-control" id="work-duration" value="25" placeholder="np. 25 lub 2.5">
-                                <small class="form-text text-muted">Czas skupienia na zadaniu<br>
-                                <strong>Przykłady:</strong> 25, 2.5 (2min 30s), 0.5 (30s), 0.017 (1s)</small>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <input type="number" class="form-control" id="work-minutes" value="25" min="0" max="120">
+                                        <small class="form-text text-muted">Minuty</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" class="form-control" id="work-seconds" value="0" min="0" max="59">
+                                        <small class="form-text text-muted">Sekundy</small>
+                                    </div>
+                                </div>
                             </div>
+                            <!-- Czas przerwy -->
                             <div class="col-md-4 mb-3">
-                                <label for="break-duration" class="form-label">
+                                <label class="form-label">
                                     <i class="fas fa-coffee text-warning me-2"></i>
-                                    Czas przerwy (minuty)
+                                    Czas przerwy
                                 </label>
-                                <input type="text" class="form-control" id="break-duration" value="5" placeholder="np. 5 lub 1.5">
-                                <small class="form-text text-muted">Czas na odpoczynek<br>
-                                <strong>Przykłady:</strong> 5, 1.5 (1min 30s), 0.25 (15s)</small>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <input type="number" class="form-control" id="break-minutes" value="5" min="0" max="60">
+                                        <small class="form-text text-muted">Minuty</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" class="form-control" id="break-seconds" value="0" min="0" max="59">
+                                        <small class="form-text text-muted">Sekundy</small>
+                                    </div>
+                                </div>
                             </div>
+                            <!-- Liczba cykli -->
                             <div class="col-md-4 mb-3">
                                 <label for="cycles" class="form-label">
                                     <i class="fas fa-redo text-info me-2"></i>
@@ -247,7 +440,7 @@
                         <div class="mt-4 p-3 bg-light rounded">
                             <h5><i class="fas fa-eye text-primary me-2"></i>Podgląd sesji:</h5>
                             <div id="session-preview" class="text-muted">
-                                4 cykle × (25 min pracy + 5 min przerwy) = <strong>2 godz.</strong>
+                                4 cykle × (25min pracy + 5min przerwy) = <strong>2h</strong>
                             </div>
                         </div>
                     </form>
@@ -265,7 +458,6 @@
 
         // Elementy DOM
         const timerDisplay = document.getElementById('timer-display');
-        const statusBadge = document.getElementById('status-badge');
         const currentSessionSpan = document.getElementById('current-session');
         const totalSessionsSpan = document.getElementById('total-sessions');
         const currentCycleSpan = document.getElementById('current-cycle');
@@ -277,9 +469,14 @@
         const pauseBtn = document.getElementById('pause-btn');
         const stopBtn = document.getElementById('stop-btn');
 
-        const workDurationInput = document.getElementById('work-duration');
-        const breakDurationInput = document.getElementById('break-duration');
+        const workMinutesInput = document.getElementById('work-minutes');
+        const workSecondsInput = document.getElementById('work-seconds');
+        const breakMinutesInput = document.getElementById('break-minutes');
+        const breakSecondsInput = document.getElementById('break-seconds');
         const cyclesInput = document.getElementById('cycles');
+
+        const focusBtn = document.getElementById('focus-btn');
+        let focusModeActive = false;
 
         // Funkcje pomocnicze
         function formatTime(seconds) {
@@ -288,57 +485,201 @@
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        function parseDecimalMinutes(input) {
-            // Obsługa zarówno . jak i , jako separator dziesiętny
-            let cleanInput = input.toString().replace(',', '.');
+        function parseTimeInputs(minutesInput, secondsInput) {
+            const minutes = parseInt(minutesInput.value) || 0;
+            const seconds = parseInt(secondsInput.value) || 0;
 
-            // Sprawdź czy to poprawna liczba
-            const number = parseFloat(cleanInput);
-            if (isNaN(number) || number < 0) {
-                throw new Error('Nieprawidłowa wartość');
+            if (minutes < 0 || seconds < 0 || seconds > 59) {
+                throw new Error('Nieprawidłowe wartości czasu');
             }
 
-            // Ograniczenie do 3 miejsc po przecinku (dokładność do sekundy)
-            const rounded = Math.round(number * 1000) / 1000;
+            const totalSeconds = (minutes * 60) + seconds;
 
-            // Konwertuj na sekundy
-            const totalSeconds = Math.round(rounded * 60);
+            if (totalSeconds === 0) {
+                throw new Error('Czas musi być większy niż 0');
+            }
 
             return {
-                minutes: rounded,
-                seconds: totalSeconds,
-                formatted: formatDecimalTime(rounded)
+                minutes: minutes,
+                seconds: seconds,
+                totalSeconds: totalSeconds,
+                formatted: formatTimeDisplay(minutes, seconds)
             };
         }
 
-        function formatDecimalTime(decimalMinutes) {
-            const totalSeconds = Math.round(decimalMinutes * 60);
-            const mins = Math.floor(totalSeconds / 60);
-            const secs = totalSeconds % 60;
-
-            if (mins === 0) {
-                return `${secs}s`;
-            } else if (secs === 0) {
-                return `${mins}min`;
+        function formatTimeDisplay(minutes, seconds) {
+            if (minutes === 0) {
+                return `${seconds}s`;
+            } else if (seconds === 0) {
+                return `${minutes}min`;
             } else {
-                return `${mins}min ${secs}s`;
+                return `${minutes}min ${seconds}s`;
             }
         }
 
-        function validateTimeInput(input, minValue = 0, maxValue = 120) {
-            try {
-                const parsed = parseDecimalMinutes(input);
-                if (parsed.minutes < minValue || parsed.minutes > maxValue) {
-                    throw new Error(`Wartość musi być między ${minValue} a ${maxValue} minutami`);
-                }
-                return parsed;
-            } catch (error) {
-                throw error;
+        // Focus Mode Functions
+        function toggleFocusMode(enable) {
+            if (enable) {
+                document.body.classList.add('zen-focus-mode');
+                focusModeActive = true;
+
+                // Update button text and icon
+                focusBtn.innerHTML = '<i class="fas fa-compress me-2"></i>Exit';
+
+                // FORCE exact dimensions for info cards
+                setTimeout(() => {
+                    const infoCards = document.querySelectorAll('.info-card');
+                    infoCards.forEach(card => {
+                        card.style.width = '300px';
+                        card.style.height = '84px';
+                        card.style.minWidth = '300px';
+                        card.style.minHeight = '84px';
+                        card.style.maxWidth = '300px';
+                        card.style.maxHeight = '84px';
+                        card.style.flex = '0 0 300px';
+                        card.style.display = 'flex';
+                        card.style.flexDirection = 'column';
+                        card.style.justifyContent = 'center';
+                        card.style.alignItems = 'center';
+                        card.style.boxSizing = 'border-box';
+                    });
+                }, 10);
+
+                // FORCE exact dimensions for timer - 40% ekranu
+                setTimeout(() => {
+                    const screenHeight = window.innerHeight;
+                    const timerHeight = screenHeight * 0.4; // 40% ekranu
+
+                    const timerDisplay = document.getElementById('timer-display');
+                    const timerContainer = timerDisplay.parentElement;
+
+                    // Force timer font size to exactly 40vh
+                    timerDisplay.style.fontSize = '40vh';
+                    timerDisplay.style.height = '40vh';
+                    timerDisplay.style.lineHeight = '1';
+                    timerDisplay.style.display = 'flex';
+                    timerDisplay.style.alignItems = 'center';
+                    timerDisplay.style.justifyContent = 'center';
+
+                    // Force SVG container
+                    timerContainer.style.height = '40vh';
+                    timerContainer.style.display = 'flex';
+                    timerContainer.style.alignItems = 'center';
+                    timerContainer.style.justifyContent = 'center';
+
+                    // Force SVG size - proportional to timer
+                    const svg = timerContainer.querySelector('svg');
+                    if (svg) {
+                        svg.style.width = '45vh';
+                        svg.style.height = '45vh';
+
+                        // Update circle attributes
+                        const circles = svg.querySelectorAll('circle');
+                        const svgSize = screenHeight * 0.45; // 45vh in pixels
+                        const radius = svgSize * 0.45; // 45% of SVG size
+                        const center = svgSize * 0.5;   // Center point
+                        const strokeWidth = svgSize * 0.03; // 3% of SVG size
+
+                        circles.forEach(circle => {
+                            circle.setAttribute('r', radius);
+                            circle.setAttribute('cx', center);
+                            circle.setAttribute('cy', center);
+                            circle.setAttribute('stroke-width', strokeWidth);
+                        });
+
+                        // Update progress circle dasharray for new radius
+                        const newCircumference = 2 * Math.PI * radius;
+                        progressCircle.style.strokeDasharray = newCircumference;
+                        progressCircle.style.strokeDashoffset = newCircumference;
+                    }
+                }, 20); // Slightly longer delay for SVG
+
+                // Scroll to top for full immersion
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            } else {
+                document.body.classList.remove('zen-focus-mode');
+                document.body.classList.remove('break-phase');
+                focusModeActive = false;
+
+                // Update button text and icon back
+                focusBtn.innerHTML = '<i class="fas fa-expand me-2"></i>Focus';
+
+                // RESTORE original dimensions for info cards
+                setTimeout(() => {
+                    const infoCards = document.querySelectorAll('.info-card');
+                    infoCards.forEach(card => {
+                        card.style.width = '';
+                        card.style.height = '';
+                        card.style.minWidth = '';
+                        card.style.minHeight = '';
+                        card.style.maxWidth = '';
+                        card.style.maxHeight = '';
+                        card.style.flex = '';
+                        card.style.display = '';
+                        card.style.flexDirection = '';
+                        card.style.justifyContent = '';
+                        card.style.alignItems = '';
+                        card.style.boxSizing = '';
+                    });
+                }, 10);
+
+                // RESTORE original timer dimensions
+                setTimeout(() => {
+                    const timerDisplay = document.getElementById('timer-display');
+                    const timerContainer = timerDisplay.parentElement;
+
+                    // Reset timer styles
+                    timerDisplay.style.fontSize = '';
+                    timerDisplay.style.height = '';
+                    timerDisplay.style.lineHeight = '';
+                    timerDisplay.style.display = '';
+                    timerDisplay.style.alignItems = '';
+                    timerDisplay.style.justifyContent = '';
+
+                    // Reset container
+                    timerContainer.style.height = '';
+                    timerContainer.style.display = '';
+                    timerContainer.style.alignItems = '';
+                    timerContainer.style.justifyContent = '';
+
+                    // Reset SVG
+                    const svg = timerContainer.querySelector('svg');
+                    if (svg) {
+                        svg.style.width = '';
+                        svg.style.height = '';
+
+                        // Reset circle attributes to original values
+                        const circles = svg.querySelectorAll('circle');
+                        circles.forEach(circle => {
+                            circle.setAttribute('r', '115');
+                            circle.setAttribute('cx', '145');
+                            circle.setAttribute('cy', '145');
+                            circle.setAttribute('stroke-width', '8');
+                        });
+
+                        // Restore original SVG dasharray for radius (115px)
+                        const originalCircumference = 2 * Math.PI * 115;
+                        progressCircle.style.strokeDasharray = originalCircumference;
+                        progressCircle.style.strokeDashoffset = originalCircumference;
+                    }
+                }, 20);
             }
         }
 
         function updateProgress(timeLeft, totalTime) {
-            const circumference = 2 * Math.PI * 120;
+            // Użyj odpowiedniego promienia w zależności od trybu
+            let radius;
+            if (focusModeActive) {
+                // W Zen Mode promień jest dynamiczny - 45% z 45vh
+                const screenHeight = window.innerHeight;
+                const svgSize = screenHeight * 0.45; // 45vh
+                radius = svgSize * 0.45; // 45% of SVG size
+            } else {
+                radius = 115; // Normalny tryb
+            }
+
+            const circumference = 2 * Math.PI * radius;
             const progress = (totalTime - timeLeft) / totalTime;
             const offset = circumference - (progress * circumference);
             progressCircle.style.strokeDashoffset = offset;
@@ -346,34 +687,41 @@
 
         function updateSessionPreview() {
             try {
-                const workInput = workDurationInput.value.trim() || '25';
-                const breakInput = breakDurationInput.value.trim() || '5';
+                const workTime = parseTimeInputs(workMinutesInput, workSecondsInput);
+                const breakTime = parseTimeInputs(breakMinutesInput, breakSecondsInput);
                 const cycles = parseInt(cyclesInput.value) || 4;
 
-                const workTime = parseDecimalMinutes(workInput);
-                const breakTime = parseDecimalMinutes(breakInput);
-
-                const totalMinutes = cycles * (workTime.minutes + breakTime.minutes);
-                const hours = Math.floor(totalMinutes / 60);
-                const minutes = Math.round((totalMinutes % 60) * 100) / 100;
+                const totalSeconds = cycles * (workTime.totalSeconds + breakTime.totalSeconds);
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
 
                 let timeString = '';
                 if (hours > 0) {
                     timeString = `${hours}h`;
                     if (minutes > 0) {
-                        timeString += ` ${minutes.toFixed(1)}min`;
+                        timeString += ` ${minutes}min`;
+                    }
+                    if (seconds > 0) {
+                        timeString += ` ${seconds}s`;
+                    }
+                } else if (minutes > 0) {
+                    timeString = `${minutes}min`;
+                    if (seconds > 0) {
+                        timeString += ` ${seconds}s`;
                     }
                 } else {
-                    timeString = `${totalMinutes.toFixed(1)}min`;
+                    timeString = `${seconds}s`;
                 }
 
                 sessionPreview.innerHTML = `
                     ${cycles} cykli × (${workTime.formatted} pracy + ${breakTime.formatted} przerwy) = <strong>${timeString}</strong>
                 `;
 
-                // Usuń błąd jeśli był
-                workDurationInput.classList.remove('is-invalid');
-                breakDurationInput.classList.remove('is-invalid');
+                // Usuń błędy jeśli były
+                [workMinutesInput, workSecondsInput, breakMinutesInput, breakSecondsInput].forEach(input => {
+                    input.classList.remove('is-invalid');
+                });
 
             } catch (error) {
                 sessionPreview.innerHTML = `
@@ -393,36 +741,40 @@
             currentCycleSpan.textContent = state.current_cycle + 1;
             totalCyclesSpan.textContent = state.cycles;
 
-            // Aktualizacja statusu
+            // Zmiana koloru okręgu i timera w zależności od fazy
             if (state.is_running) {
                 if (state.is_break) {
-                    statusBadge.className = 'status-badge break-status';
-                    statusBadge.innerHTML = `
-                        <div class="info-label">STATUS</div>
-                        <div class="info-value">
-                            <i class="fas fa-coffee me-2"></i>Przerwa
-                        </div>
-                    `;
-                    progressCircle.style.stroke = '#ffc107';
+                    progressCircle.style.stroke = '#ffc107';  // Żółty dla przerwy
+                    timerDisplay.style.color = focusModeActive ? '#ffffff' : '#ffc107';
+
+                    // W Zen Mode zmień tło na żółte (przerwa)
+                    if (focusModeActive) {
+                        document.body.classList.add('break-phase');
+                    }
                 } else {
-                    statusBadge.className = 'status-badge work-status';
-                    statusBadge.innerHTML = `
-                        <div class="info-label">STATUS</div>
-                        <div class="info-value">
-                            <i class="fas fa-play me-2"></i>Praca
-                        </div>
-                    `;
-                    progressCircle.style.stroke = '#28a745';
+                    progressCircle.style.stroke = '#28a745';  // Zielony dla pracy
+                    timerDisplay.style.color = focusModeActive ? '#ffffff' : '#28a745';
+
+                    // W Zen Mode tło zielone (praca)
+                    if (focusModeActive) {
+                        document.body.classList.remove('break-phase');
+                    }
                 }
             } else {
-                statusBadge.className = 'status-badge stopped-status';
-                statusBadge.innerHTML = `
-                    <div class="info-label">STATUS</div>
-                    <div class="info-value">
-                        <i class="fas fa-stop me-2"></i>Zatrzymany
-                    </div>
-                `;
-                progressCircle.style.stroke = '#6c757d';
+                progressCircle.style.stroke = '#6c757d';     // Szary gdy zatrzymany
+                timerDisplay.style.color = focusModeActive ? '#ffffff' : '#333';
+
+                // Reset tła do domyślnego (zielony) gdy nie działa
+                if (focusModeActive) {
+                    document.body.classList.remove('break-phase');
+                }
+
+                // Auto-wyłącz Focus Mode gdy timer się kończy lub zostaje zatrzymany
+                if (focusModeActive && state.time_left === 0) {
+                    setTimeout(() => {
+                        toggleFocusMode(false);
+                    }, 1000); // 1 sekunda opóźnienia dla płynności
+                }
             }
 
             // Aktualizacja przycisków
@@ -448,13 +800,9 @@
         // Event listenery
         startBtn.addEventListener('click', () => {
             try {
-                const workInput = workDurationInput.value.trim();
-                const breakInput = breakDurationInput.value.trim();
+                const workTime = parseTimeInputs(workMinutesInput, workSecondsInput);
+                const breakTime = parseTimeInputs(breakMinutesInput, breakSecondsInput);
                 const cycles = parseInt(cyclesInput.value);
-
-                // Walidacja i parsowanie czasu pracy
-                const workTime = validateTimeInput(workInput, 0.017, 120); // min 1 sekunda (0.017 min)
-                const breakTime = validateTimeInput(breakInput, 0.017, 60);  // min 1 sekunda
 
                 // Walidacja cykli
                 if (cycles < 1 || cycles > 20) {
@@ -462,9 +810,20 @@
                     return;
                 }
 
+                // Walidacja maksymalnego czasu (120 minut = 7200 sekund)
+                if (workTime.totalSeconds > 7200) {
+                    alert('Czas pracy nie może przekraczać 120 minut');
+                    return;
+                }
+                if (breakTime.totalSeconds > 3600) {
+                    alert('Czas przerwy nie może przekraczać 60 minut');
+                    return;
+                }
+
                 // Usuń oznaczenia błędów
-                workDurationInput.classList.remove('is-invalid');
-                breakDurationInput.classList.remove('is-invalid');
+                [workMinutesInput, workSecondsInput, breakMinutesInput, breakSecondsInput].forEach(input => {
+                    input.classList.remove('is-invalid');
+                });
 
                 fetch('/api/start', {
                     method: 'POST',
@@ -472,8 +831,8 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        work_duration: workTime.minutes,      // Wyślij jako ułamek dziesiętny
-                        break_duration: breakTime.minutes,    // Wyślij jako ułamek dziesiętny
+                        work_duration: workTime.totalSeconds / 60,      // Konwertuj na ułamek minut dla backend
+                        break_duration: breakTime.totalSeconds / 60,    // Konwertuj na ułamek minut dla backend
                         cycles: cycles
                     })
                 })
@@ -494,12 +853,12 @@
             } catch (error) {
                 alert(error.message);
 
-                // Oznacz nieprawidłowe pole
-                if (error.message.includes('pracy')) {
-                    workDurationInput.classList.add('is-invalid');
-                } else if (error.message.includes('przerwy')) {
-                    breakDurationInput.classList.add('is-invalid');
-                }
+                // Oznacz nieprawidłowe pola
+                [workMinutesInput, workSecondsInput, breakMinutesInput, breakSecondsInput].forEach(input => {
+                    if (input.value && (parseInt(input.value) < 0 || (input.id.includes('seconds') && parseInt(input.value) > 59))) {
+                        input.classList.add('is-invalid');
+                    }
+                });
             }
         });
 
@@ -530,12 +889,31 @@
                 updateUI(data.timer_state);
                 clearInterval(updateInterval);
                 pauseBtn.innerHTML = '<i class="fas fa-pause me-2"></i>Pauza';
+
+                // Auto-wyłącz Focus Mode przy zatrzymaniu timera
+                if (focusModeActive) {
+                    setTimeout(() => {
+                        toggleFocusMode(false);
+                    }, 500);
+                }
             })
             .catch(error => console.error('Błąd:', error));
         });
 
+        // Focus Mode Button Event Listener
+        focusBtn.addEventListener('click', () => {
+            toggleFocusMode(!focusModeActive);
+        });
+
+        // Escape key to exit Focus Mode
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && focusModeActive) {
+                toggleFocusMode(false);
+            }
+        });
+
         // Aktualizacja podglądu przy zmianie ustawień
-        [workDurationInput, breakDurationInput, cyclesInput].forEach(input => {
+        [workMinutesInput, workSecondsInput, breakMinutesInput, breakSecondsInput, cyclesInput].forEach(input => {
             input.addEventListener('input', updateSessionPreview);
         });
 
